@@ -2,7 +2,20 @@ import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 
-const UserProfileInfo = ({ username, picture, numberCountries }) => {
+interface UserProfileInfoProps {
+    username: string;
+    picture?: string;
+    numberCountries: number;
+}
+
+/**
+ * UserProfileInfo component displays user's profile information including
+ * profile picture, username, and number of countries visited with a circular progress bar.
+ *
+ * @param {UserProfileInfoProps} props The properties for the UserProfileInfo component.
+ * @returns {JSX.Element} Returns a JSX element representing user's profile information.
+ */
+const UserProfileInfo= ({ username, picture, numberCountries }: UserProfileInfoProps): JSX.Element => {
     const defaultPicture = 'https://cdn-icons-png.flaticon.com/512/847/847969.png';
     const percentage = Math.ceil((numberCountries * 100) / 73);
 

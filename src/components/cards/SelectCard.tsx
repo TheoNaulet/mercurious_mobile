@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, ActivityIndicator, TouchableOpacity } from 'react-native';
 
-const CitySelectionCard = ({ Name, CardImage, onSelectCity }) => {
+interface CitySelectionCardProps {
+    Name: string;
+    CardImage: string;
+    onSelectCity: (cityName: string) => void;
+}
+
+const CitySelectionCard: React.FC<CitySelectionCardProps> = ({ Name, CardImage, onSelectCity }) => {
     const [imageLoaded, setImageLoaded] = useState(false);
 
     const handlePress = () => {
@@ -21,7 +27,7 @@ const CitySelectionCard = ({ Name, CardImage, onSelectCity }) => {
             </View>
         </TouchableOpacity>
     );
-    };
+};
 
     const styles = StyleSheet.create({
     container: {

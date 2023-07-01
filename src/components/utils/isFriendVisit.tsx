@@ -4,10 +4,19 @@ import { UserContext } from '../../../context/UserContext';
 import { useContext } from 'react';
 import { isVisited } from '../../api/places';
 
-const IsFriendVisit = ({ placeId }) => {
+/**
+ * Component to check if friends have visited a specific place.
+ *
+ * @param {{placeId: string}} props - The properties passed to this component.
+ * @returns {JSX.Element} - A JSX element that displays the number of friends who have visited a place.
+ */
+const IsFriendVisit = ({ placeId }: { placeId: string; }): JSX.Element => {
     const { followings } = useContext(UserContext);
     const [visitedUsers, setVisitedUsers] = useState([]);
 
+    /**
+     * Check if friends have visited a specific place and updates the state.
+     */
     const checkVisited = async () => {
         const newVisitedUsers:any = [];
         for (let following of followings) {

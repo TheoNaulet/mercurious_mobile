@@ -5,7 +5,26 @@ import { getCountryByName, likeCountry } from '../../api/country';
 import { getCityByName, likeCity } from '../../api/city';
 import { isLiked, likePlace, unlikePlace } from '../../api/places';
 
-const LikeButton = ({uid, place, id }) => {
+interface LikeButtonProps {
+    uid: string;
+    place: {
+        id: string;
+        country: string;
+        city: string;
+        name: string;
+        note: number;
+        picture: string;
+        extraImage: string;
+    };
+    id: string;
+}
+
+/**
+ * LikeButton component for liking or unliking a place.
+ * 
+ * @param {LikeButtonProps} props - Props passed down to the LikeButton component.
+ */
+const LikeButton: React.FC<LikeButtonProps> = ({ uid, place, id }) => {
     const [liked, setLiked] = useState(false);
     const [country, setCountry] = useState('');
     const [city, setCity] = useState('');

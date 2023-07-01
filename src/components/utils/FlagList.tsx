@@ -1,7 +1,31 @@
 import React from 'react';
 import { View, Text, ImageBackground, StyleSheet, FlatList,TouchableOpacity } from 'react-native';
 
-const FlagItem = ({ country, onSelect, isSelected }) => (
+interface Country {
+    flag: string;
+    countryName: string;
+    _id: string;
+}
+
+interface FlagItemProps {
+    country: Country;
+    onSelect: (country: Country) => void;
+    isSelected: boolean;
+}
+
+interface FlagListProps {
+    countryList: Country[];
+    onSelectCountry: (country: Country) => void;
+    selectedCountry: Country | null;
+}
+
+/**
+ * FlagItem component that renders a single flag item.
+ *
+ * @param {FlagItemProps} props - The properties for FlagItem component.
+ * @returns {JSX.Element} Returns the FlagItem component.
+ */
+const FlagItem: React.FC<FlagItemProps> = ({ country, onSelect, isSelected }: FlagItemProps): JSX.Element => (
     <TouchableOpacity onPress={() => onSelect(country)}>
         <View style={[styles.flagItem, isSelected ? styles.selectedFlag : null]}>
             <ImageBackground
@@ -17,7 +41,13 @@ const FlagItem = ({ country, onSelect, isSelected }) => (
     </TouchableOpacity>
 );
 
-const FlagList = ({ countryList, onSelectCountry, selectedCountry }) => (
+/**
+ * FlagList component that renders a horizontal list of FlagItems.
+ *
+ * @param {FlagListProps} props - The properties for FlagList component.
+ * @returns {JSX.Element} Returns the FlagList component.
+ */
+const FlagList: React.FC<FlagListProps> = ({ countryList, onSelectCountry, selectedCountry }: FlagListProps): JSX.Element => (
     <FlatList
         data={countryList}
         keyExtractor={(item) => item._id}

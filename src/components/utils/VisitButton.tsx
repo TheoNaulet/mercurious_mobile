@@ -5,7 +5,30 @@ import { getCountryByName, visitCountry } from '../../api/country';
 import { getCityByName, visitCity } from '../../api/city';
 import { StyleSheet } from 'react-native';
 
-const VisitButton = ({ uid, place, id }) => {
+interface VisitButtonProps {
+    uid: string;
+    place: {
+        id: string;
+        country: string;
+        city: string;
+        name: string;
+        note: number;
+        picture: string;
+        extraImage: string;
+    };
+    id: string;
+}
+
+/**
+ * VisitButton component for marking a place as visited.
+ * 
+ * @param {Object} props - Props passed down to the VisitButton component.
+ * @param {string} props.uid - The user ID.
+ * @param {Object} props.place - Object containing information about the place.
+ * @param {string} props.id - ID of the place.
+ * 
+ */
+const VisitButton: React.FC<VisitButtonProps> = ({ uid, place, id }) => {
     const [visited, setVisited] = useState(false);
     const [country, setCountry] = useState('');
     const [city, setCity] = useState('');
@@ -44,7 +67,7 @@ const VisitButton = ({ uid, place, id }) => {
 
     return (
         <TouchableOpacity onPress={onVisit} style={styles.visitedButton}>
-            <Text style={styles.buttonText}>{visited ? 'Visité ✅' : 'Déjà visité ?'}</Text>
+            <Text>{visited ? 'Visité ✅' : 'Déjà visité ?'}</Text>
         </TouchableOpacity>
     );
 };

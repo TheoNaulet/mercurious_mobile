@@ -1,11 +1,27 @@
 import React from 'react';
 import { Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 
-export default function ButtonList({ item, setItem, list }) {
+interface ButtonListProps {
+  item: any;
+  setItem: (item: any) => void;
+  list: any[];
+}
+
+/**
+ * ButtonList component that renders a horizontal scrollable list of buttons.
+ *
+ * @component
+ * @param {Object} props - The properties object.
+ * @param {any} props.item - The currently selected item.
+ * @param {(item: any) => void} props.setItem - Function to set the selected item.
+ * @param {Array<string | number | boolean | React.ReactElement | React.ReactFragment | React.ReactPortal | null>} props.list - The list of items to be rendered as buttons.
+ * @returns {JSX.Element} Returns the ButtonList component.
+ */
+const ButtonList: React.FC<ButtonListProps> = ({ item, setItem, list }: { item: any; setItem: (item: any) => void; list: Array<string | number | boolean | React.ReactElement | React.ReactFragment | React.ReactPortal | null>; }): JSX.Element => {
 
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.container}>
-      {list?.map((val, index) => (
+      {list?.map((val: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactFragment | React.ReactPortal | null | undefined, index: React.Key | null | undefined) => (
         <TouchableOpacity
           key={index}
           style={[
@@ -56,3 +72,5 @@ const styles = StyleSheet.create({
         backgroundColor:'#BB2649',
     },
 });
+
+export default ButtonList;
