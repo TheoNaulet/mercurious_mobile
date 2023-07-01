@@ -2,7 +2,15 @@ import { FIREBASE_AUTH } from '../../FirebaseConfig';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { createNewUser } from '../api/user';
 
-export const signInUser = async (email: string, password: string) => {
+/**
+ * Sign in user using email and password through Firebase authentication.
+ * 
+ * @async
+ * @param {string} email - The email address.
+ * @param {string} password - The password.
+ * @throws Will throw an error if login fails.
+ */
+export const signInUser = async (email: string, password: string): Promise<void> => {
     const auth = FIREBASE_AUTH;
     try {
         await signInWithEmailAndPassword(auth, email, password);
@@ -11,7 +19,15 @@ export const signInUser = async (email: string, password: string) => {
     }
 };
 
-export const signUpUser = async (email: string, password: string) => {
+/**
+ * Sign up user using email and password through Firebase authentication.
+ * 
+ * @async
+ * @param {string} email - The email address.
+ * @param {string} password - The password.
+ * @throws Will throw an error if registration fails.
+ */
+export const signUpUser = async (email: string, password: string): Promise<void> => {
     const auth = FIREBASE_AUTH;
     try {
         const response = await createUserWithEmailAndPassword(auth, email, password);
