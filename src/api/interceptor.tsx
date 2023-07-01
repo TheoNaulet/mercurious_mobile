@@ -1,5 +1,10 @@
 import axios from 'axios';
 
+/**
+ * Axios instance configured with baseURL and headers.
+ *
+ * @type {AxiosInstance}
+ */
 const axiosInstance = axios.create({
 	baseURL: process.env.REACT_APP_API_URL,
 	headers: {
@@ -7,6 +12,9 @@ const axiosInstance = axios.create({
 	},
 });
 
+/**
+ * Axios request interceptor to add authorization token to request headers.
+ */
 axiosInstance.interceptors.request.use(
 	(config) => {
 		const token = process.env.REACT_APP_API_TOKEN;

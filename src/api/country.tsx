@@ -1,24 +1,51 @@
 import axiosInstance from "./interceptor";
 
-export async function getCountries(){
+/**
+ * Fetch all countries.
+ *
+ * @async
+ * @returns {Promise<any>} Returns the data of the response with all countries.
+ */
+export async function getCountries(): Promise<any> {
     return axiosInstance.get(`${process.env.REACT_APP_API_URL}/getAllCountries`).then((response) => {
         return(response.data);
     });
 }
 
-export async function getCountriesByContinent(continent: string){
+/**
+ * Fetch countries by continent.
+ *
+ * @async
+ * @param {string} continent - The continent to filter countries by.
+ * @returns {Promise<any>} Returns the data of the response with countries from the specified continent.
+ */
+export async function getCountriesByContinent(continent: string): Promise<any> {
     return axiosInstance.get(`${process.env.REACT_APP_API_URL}/getContinent/${continent}`).then((response) => {
         return(response.data);
     });
 }
 
-export async function searchCountry(query: any) {
+/**
+ * Search for a country.
+ *
+ * @async
+ * @param {string} query - The query to search countries by.
+ * @returns {Promise<any>} Returns the data of the response with the search results.
+ */
+export async function searchCountry(query: string): Promise<any> {
 	return axiosInstance.get(`${process.env.REACT_APP_API_URL}/searchCountry/${query}`).then((response) => {
             return response.data
 	});
 }
 
-export async function getLikedCountries(id: string | undefined) {
+/**
+ * Fetch liked countries by user ID.
+ *
+ * @async
+ * @param {string} id - The user ID.
+ * @returns {Promise<any>} Returns the data of the response with the liked countries.
+ */
+export async function getLikedCountries(id: string): Promise<any> {
     if(!id){
 		return;
 	}
@@ -27,7 +54,15 @@ export async function getLikedCountries(id: string | undefined) {
 	});
 }
 
-export async function getCountryByName(name: string){
+/**
+ * Fetch country by name.
+ *
+ * @async
+ * @param {string} name - The name of the country.
+ * @returns {Promise<any>} Returns the data of the response with the country.
+ * @throws {Error} Logs error if the request fails.
+ */
+export async function getCountryByName(name: string): Promise<any> {
     try {
         return axiosInstance.get(`${process.env.REACT_APP_API_URL}/getCountryByName${name}`).then((response) => {
             return response.data;
@@ -37,7 +72,15 @@ export async function getCountryByName(name: string){
     }
 }
 
-export async function likeCountry(id: any, liked: any) {
+/**
+ * Like a country.
+ *
+ * @async
+ * @param {string} id - The user ID.
+ * @param {any} liked - The country object to like.
+ * @returns {Promise<any>} Returns the response of the request.
+ */
+export async function likeCountry(id: string, liked: any): Promise<any> {
 	return axiosInstance.put(`${process.env.REACT_APP_API_URL}/likeCountry`, {
         userId: id,
         liked : liked
@@ -46,7 +89,15 @@ export async function likeCountry(id: any, liked: any) {
 	});
 }
 
-export async function visitCountry(id: string | undefined, visited: any) {
+/**
+ * Mark a country as visited.
+ *
+ * @async
+ * @param {string} id - The user ID.
+ * @param {any} visited - The country object to mark as visited.
+ * @returns {Promise<any>} Returns the response of the request.
+ */
+export async function visitCountry(id: string, visited: any): Promise<any> {
 	return axiosInstance.put(`${process.env.REACT_APP_API_URL}/visitCountry`, {
         userId: id,
         visited : visited
@@ -55,7 +106,14 @@ export async function visitCountry(id: string | undefined, visited: any) {
 	});
 }
 
-export async function getVisitedCountries(id: string | undefined) {
+/**
+ * Fetch visited countries by user ID.
+ *
+ * @async
+ * @param {string} id - The user ID.
+ * @returns {Promise<any>} Returns the data of the response with the visited countries.
+ */
+export async function getVisitedCountries(id: string): Promise<any> {
     if(!id){
 		return;
 	}
