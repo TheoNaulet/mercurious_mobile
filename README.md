@@ -38,7 +38,26 @@ Mercurious is built with cutting-edge technologies:
 
 ## Installation
 
+Before proceeding, make sure you have [Node.js](https://nodejs.org/en/download/) installed on your system.
 
+1. **Clone the Repository**: Start by cloning this repository to your local machine. Open a terminal and run:
+   ```sh
+   git clone https://github.com/TheoNaulet/mercurious_mobile.git
+
+2. Navigate to the Directory: Change to the directory of the cloned repository.
+
+   ```sh
+   cd mercurious_mobile
+   
+3. Install Dependencies
+
+   ```sh
+   npm install
+
+4. Start the Project
+
+   ```sh
+   npm start
 
 ## Usage Guide
 
