@@ -68,12 +68,15 @@ const Login = () => {
                 ) : (
                 <>
                     {errorMessage && <Text style={{ color: '#BB2649' }}>{errorMessage}</Text>}
-                    <Button style={styles.login} title="Login" onPress={signIn} />
-                    <TouchableOpacity style={styles.googleButton} onPress={signInWithGoogle}>
-                        <Icon name="google" type="font-awesome" color="white" size={20} style={styles.googleIcon} />
-                        <Text style={styles.googleButtonText}>Connecter avec Google</Text>
+
+                    <TouchableOpacity style={styles.loginButton} onPress={signIn}>
+                        <Text style={styles.loginButtonText}>Login</Text>
                     </TouchableOpacity>
-                    <Button title="Create Account" onPress={signUp} />
+
+                    <TouchableOpacity style={styles.loginButton} onPress={signUp}>
+                        <Text style={styles.loginButtonText}>Create Account</Text>
+                    </TouchableOpacity>
+
                 </>
                 )}
             </KeyboardAvoidingView>
@@ -118,23 +121,21 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         backgroundColor: 'white',
     },
-    googleButton: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#BB2649',
-        borderRadius: 8,
-        height: 40,
+    loginButton:{
+        backgroundColor:"#BB2649",
         marginBottom: 20,
+        width: 300,
+        height: 40,
+        borderRadius:10,
+        justifyContent:'center',
     },
-    googleIcon: {
-        marginRight: 10,
-    },
-    googleButtonText: {
-        color: 'white',
-        fontSize: 16,
-        fontWeight: 'bold',
-    },
+    loginButtonText:{
+        fontSize:20,
+        color:'white',
+        fontWeight:'bold',
+        textAlign:'center',
+    }
+
 });
 
 export default Login;
