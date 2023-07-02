@@ -75,3 +75,69 @@ export async function getFollowings(userId: string): Promise<any> {
 		return response.data;
 	});
 }
+
+/**
+ * Searches for a user by a query string.
+ * 
+ * @async
+ * @function
+ * @param {string} query - The query string to search for a user.
+ * @returns {Promise<Object>} - Returns a promise that resolves with the data from the response.
+ * 
+ */
+export async function searchUser(query: string): Promise<Object> {
+	return axiosInstance.get(`${process.env.REACT_APP_API_URL}/searchUser/${query}`).then((response) => {
+            return response.data
+	});
+}
+
+/**
+ * Fetches the profile picture of a user by their user ID.
+ * 
+ * @async
+ * @param {string} userId - The ID of the user whose profile picture is to be fetched.
+ * @returns {Promise<string | null>} - Returns a promise that resolves with the URL of the profile picture or null if not found.
+ * 
+ */
+export async function getProfilePicture(userId: string): Promise<string | null> {
+	if (userId === undefined)
+		return null;
+
+	return axiosInstance.get(`${process.env.REACT_APP_API_URL}/getProfilePicture/${userId}`).then((response) => {
+		return response?.data[0]?.Profile_picture;
+	});
+}
+
+/**
+ * Sends a follow request to the server
+ * @async
+ * @function
+ * @param {string} follower - ID of the user who wants to follow someone.
+ * @param {string} followed - ID of the user who is going to be followed.
+ * @returns {Promise<any>} - The response from the server.
+ */
+export async function follow(follower: string, followed: string): Promise<any> {
+	return axiosInstance.put(`${process.env.REACT_APP_API_URL}/follow`, {
+        followed: followed,
+        follower : follower
+    }).then((response) => {
+		return response;
+	});
+}
+
+/**
+ * Sends an unfollow request to the server
+ * @async
+ * @function
+ * @param {string} follower - ID of the user who wants to unfollow someone.
+ * @param {string} followed - ID of the user who is going to be unfollowed.
+ * @returns {Promise<any>} - The response from the server.
+ */
+export async function unfollow(follower: string, followed: string): Promise<any> {
+	return axiosInstance.put(`${process.env.REACT_APP_API_URL}/unfollow`, {
+        followed: followed,
+        follower : follower
+    }).then((response) => {
+		return response;
+	});
+}

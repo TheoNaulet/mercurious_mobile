@@ -14,6 +14,7 @@ import CityScreen from './src/screens/CityScreen';
 import CountryScreen from './src/screens/CountryScreen';
 import PlaceScreen from './src/screens/PlaceScreen';
 import Login from './src/screens/Login';
+import FriendScreen from './src/screens/FriendScreen';
 import LikedCityScreen from './src/screens/LikedCityScreen';
 import { FIREBASE_AUTH } from './FirebaseConfig';
 
@@ -29,6 +30,7 @@ const HomeStackNavigator = () => (
     <HomeStack.Screen name="CityScreen" component={CityScreen} options={({ route }) => ({ title: route.params.city })}/>
     <HomeStack.Screen name="CountryScreen" component={CountryScreen} options={({ route }) => ({ title: route.params.country })} />
     <HomeStack.Screen name="PlaceScreen" component={PlaceScreen} />
+    <HomeStack.Screen name="FriendScreen" component={FriendScreen} />
     <HomeStack.Screen name="Login" component={Login} options={{ headerShown: false }} />
   </HomeStack.Navigator>
 );

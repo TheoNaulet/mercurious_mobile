@@ -4,12 +4,14 @@ import { searchCity } from '../api/city';
 import { searchCountry } from '../api/country';
 import { searchPlace } from '../api/places';
 import { Icon } from 'react-native-elements';
+import { searchUser } from '../api/user';
 
 const SearchScreen = ({navigation}) => {
   const [query, setQuery] = useState('');
   const [placeList, setPlaceList] = useState(); 
 	const [cityList, setCityList] = useState(); 
 	const [countryList, setCountryList] = useState(); 
+  const [userList, setUserList] = useState(); 
 
   useEffect(() => {
     const timeoutId = setTimeout(handleSearch, 500);
@@ -30,6 +32,9 @@ const SearchScreen = ({navigation}) => {
 				})
 				await searchPlace(query).then((response)=>{
 					setPlaceList(response);
+				})
+        await searchUser(query).then((response)=>{
+					setUserList(response);
 				})
 			}
 				} catch (error) {
@@ -87,6 +92,19 @@ const SearchScreen = ({navigation}) => {
         >
           <Image style={styles.itemImage} source={{ uri: val.Image }} />
           <Text style={styles.searchItemText}>{val.Name}, {val.City}</Text>
+        </TouchableOpacity>
+      ))}
+
+      {userList && userList.map((val, key) => (
+        <TouchableOpacity
+          key={key}
+          style={styles.searchItem}
+          onPress={() => {
+            navigation.navigate('FriendScreen', { User: val.userId });
+          }}
+        >
+          <Image style={styles.itemImage} source={{ uri: val.Profile_picture }} />
+          <Text style={styles.searchItemText}>{val.Username}</Text>
         </TouchableOpacity>
       ))}
       </ScrollView>
