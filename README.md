@@ -42,6 +42,11 @@ Before proceeding, make sure you have [Node.js](https://nodejs.org/en/download/)
 
 > 🚨 Note: This application requires the Mercurious API to function. Please ensure that you have also set up the [Mercurious API](https://github.com/TheoNaulet/Mercurious-api) before running this application 🖥️.
 
+> ⚠️ Note: This project's early stages have been verified with the following setup configuration. We could not guarantee compatibility with the higher or lesser version:
+> npm version: 9.5.1
+> expo version: 6.3.8
+> react-native version: 0.72.1
+
 1. **Clone the Repository** 📥: Start by cloning this repository to your local machine. Open a terminal and run:
    ```sh
    git clone https://github.com/TheoNaulet/mercurious_mobile.git
