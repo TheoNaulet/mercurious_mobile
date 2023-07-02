@@ -83,14 +83,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
   },
   countriesContainer:{
-    height:250,
+    height:200,
     flex:1,
     flexDirection:"row",
     alignItems: 'center',
     padding: 10,
   },
   citiesContainer:{
-    height:250,
+    height:200,
     flex:1,
     flexDirection:"row",
     alignItems: 'center',
