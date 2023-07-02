@@ -26,7 +26,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({ followerId, followedId }) =
     };
 
     useEffect(()=>{
-        if(!followerId || followedId) return;
+        if(!followerId || !followedId) return;
 
         handleFetchFollowers(); 
     },[followerId, followedId])
