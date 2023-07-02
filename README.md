@@ -61,5 +61,10 @@ Before proceeding, make sure you have [Node.js](https://nodejs.org/en/download/)
 
 ## Usage Guide
 
+1. Explore: Browse through a feed of stunning places and discover new destinations.
+2. Save & Mark: Save captivating places by liking them for future reference and mark the places you’ve visited.
+3. Socialize: Visit friends’ profiles, see their journeys, and plan your next adventure inspired by their travels.
+   
+Please note that Mercurious requires an internet connection for full functionality.
 
 
