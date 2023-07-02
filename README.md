@@ -29,12 +29,13 @@ Mercurious is built with cutting-edge technologies:
 
 ## Screenshots
 
-![IMG_5669](https://github.com/TheoNaulet/mercurious_mobile/assets/98829104/ce6d2008-a3b3-450e-abac-71017a1b77e0)
-![IMG_5670](https://github.com/TheoNaulet/mercurious_mobile/assets/98829104/f8b5188f-4cd3-43c4-baba-9b00a3e6acc7)
-![IMG_5671](https://github.com/TheoNaulet/mercurious_mobile/assets/98829104/751da49f-36fb-4d24-8568-9bbeef6c7de0)
-![IMG_5672](https://github.com/TheoNaulet/mercurious_mobile/assets/98829104/c42fd8cc-97e9-45c7-ae6f-afcd42150da0)
-![IMG_5673](https://github.com/TheoNaulet/mercurious_mobile/assets/98829104/6dc6f920-6709-4e80-a8c5-669700431445)
-![IMG_5675](https://github.com/TheoNaulet/mercurious_mobile/assets/98829104/10add4ca-4c2e-41e6-942d-a785232bde52)
+<img src="https://github.com/TheoNaulet/mercurious_mobile/assets/98829104/ce6d2008-a3b3-450e-abac-71017a1b77e0" width="200">
+<img src="https://github.com/TheoNaulet/mercurious_mobile/assets/98829104/f8b5188f-4cd3-43c4-baba-9b00a3e6acc7" width="200">
+<img src="https://github.com/TheoNaulet/mercurious_mobile/assets/98829104/751da49f-36fb-4d24-8568-9bbeef6c7de0" width="200">
+<img src="https://github.com/TheoNaulet/mercurious_mobile/assets/98829104/c42fd8cc-97e9-45c7-ae6f-afcd42150da0" width="200">
+<img src="https://github.com/TheoNaulet/mercurious_mobile/assets/98829104/6dc6f920-6709-4e80-a8c5-669700431445" width="200">
+<img src="https://github.com/TheoNaulet/mercurious_mobile/assets/98829104/10add4ca-4c2e-41e6-942d-a785232bde52" width="200">
+
 
 ## Installation
 
