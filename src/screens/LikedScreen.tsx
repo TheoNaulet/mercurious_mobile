@@ -35,7 +35,7 @@ const LikedScreen = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Pays que vous avez aimé</Text>
+      <Text style={styles.text}>Pays que vous avez aimés</Text>
       <ScrollView contentContainerStyle={styles.buttonContainer}>
         {countryList?.map((val: { countryName: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactFragment | React.ReactPortal | null | undefined; image: any; }, index: React.Key | null | undefined) => (
           <TouchableOpacity onPress={() => handleButtonPress(val.countryName)} key={index} style={styles.button}>
