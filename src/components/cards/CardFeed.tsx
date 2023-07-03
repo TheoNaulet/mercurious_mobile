@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
 	},
 	image: {
 		flexShrink: 0,
-		width: 375,
+		width: '100%',
 		height: 375,
 		borderRadius: 20,
 	},
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
 	nameContainer:{
 		justifyContent:'space-between',
 		flexDirection:'row',
-		width:350,
+		width:'100%',
 	},
 	noteContainer:{
 		flexDirection:'row',
