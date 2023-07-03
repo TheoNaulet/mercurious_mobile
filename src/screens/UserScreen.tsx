@@ -168,7 +168,6 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
     paddingHorizontal:8, 
     width:'96%',
-    backgroundColor:"red"
   },
 });
 
