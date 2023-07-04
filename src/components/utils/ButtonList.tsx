@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { Text, TouchableOpacity, StyleSheet, ScrollView, View } from 'react-native';
 
 interface ButtonListProps {
   item: any;
@@ -20,32 +20,45 @@ interface ButtonListProps {
 const ButtonList: React.FC<ButtonListProps> = ({ item, setItem, list }: { item: any; setItem: (item: any) => void; list: Array<string | number | boolean | React.ReactElement | React.ReactFragment | React.ReactPortal | null>; }): JSX.Element => {
 
   return (
-    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.container}>
-      {list?.map((val: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactFragment | React.ReactPortal | null | undefined, index: React.Key | null | undefined) => (
-        <TouchableOpacity
-          key={index}
-          style={[
-            styles.button,
-            item === val ? styles.selectedButton : {},
-          ]}
-          onPress={() => setItem(val)}
-        >
-          <Text style={[styles.buttonText,item === val ? styles.buttonTextSelected : {}]}>
-            {val}
-          </Text>
-        </TouchableOpacity>
-      ))}
-    </ScrollView>
+    <View style={styles.buttonListContainer}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.container}
+      >
+        {list?.map((val, index) => (
+          <TouchableOpacity
+            key={index}
+            style={[
+              styles.button,
+              item === val ? styles.selectedButton : {},
+            ]}
+            onPress={() => setItem(val)}
+          >
+            <Text
+              style={[
+                styles.buttonText,
+                item === val ? styles.buttonTextSelected : {},
+              ]}
+            >
+              {val}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+    </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
     container: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        height:110,
-        padding: 10,
-        marginBottom:20,
+      flexDirection: 'row',
+      alignItems: 'center',
+      height: 110,
+      padding: 10,
+    },
+    buttonListContainer: {
+      height:110,
     },
     button: {
         height:40,

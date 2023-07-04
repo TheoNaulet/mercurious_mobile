@@ -40,7 +40,6 @@ const CityScreen = ({ route, navigation }) => {
 
   return (
     <ScrollView contentContainerStyle={styles.contentContainer}>
-      <View style={styles.container}>
         {error && <Text style={styles.errorText}>Erreur: {error}</Text>}
         {placeList && (
           <View style={styles.placesContainer}>
@@ -49,7 +48,6 @@ const CityScreen = ({ route, navigation }) => {
               ))}
           </View>
         )}
-      </View>
     </ScrollView>
   );
 };
@@ -75,6 +73,7 @@ const styles = StyleSheet.create({
   },
   placesContainer: {
     marginTop: 20,
+    width:"96%",
   },
 });
 

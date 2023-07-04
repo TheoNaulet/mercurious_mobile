@@ -176,7 +176,8 @@ const styles = StyleSheet.create({
     visitedPlaces: {
         alignSelf:'center',
         paddingBottom: 20,
-        paddingHorizontal:8
+        paddingHorizontal:8,
+        width:'96%',
     },
 });
 

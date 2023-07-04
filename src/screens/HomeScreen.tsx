@@ -45,7 +45,6 @@ const HomeScreen = ({navigation}) => {
       onScroll={handleScroll}
       scrollEventThrottle={400}
     >
-      <View style={styles.container}>
         {error && <Text style={styles.errorText}>Erreur: {error}</Text>}
         {places && (
           <View style={styles.placesContainer}>
@@ -54,15 +53,11 @@ const HomeScreen = ({navigation}) => {
             ))}
           </View>
         )}
-      </View>
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  container:{
-    backgroundColor:'white',
-  },
   contentContainer: {
     backgroundColor:"white",
     alignItems: 'center',
@@ -78,6 +73,7 @@ const styles = StyleSheet.create({
   },
   placesContainer: {
     marginTop: 20,
+    width:"96%",
   },
   placeName: {
     fontSize: 16,
