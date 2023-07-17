@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, Image, ScrollView, StyleSheet } from 'react-native';
+import React, { useEffect, useState, useRef, useLayoutEffect } from 'react';
+import { View, Text, Image, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { getVisitedCountries } from '../api/country';
 import { getVisitedPlaces } from '../api/places';
 import { getUsername } from '../api/user';
@@ -10,8 +10,9 @@ import CitySelectionCard from '../components/cards/SelectCard';
 import CardFeed from '../components/cards/CardFeed';
 import UserProfileInfo from '../components/utils/UserProfileInfos';
 import { useIsFocused } from '@react-navigation/native';
+import { Icon } from 'react-native-elements';
 
-const ProfileSection = ({navigation}) => {
+const UserScreen = ({navigation}) => {
   const auth = FIREBASE_AUTH; 
   const uid = auth?.currentUser?.uid; 
   const isFocused = useIsFocused();
@@ -26,6 +27,24 @@ const ProfileSection = ({navigation}) => {
 	const [numberCountries, setNumberCountries] = useState(Number);
 	const [currentCountry, setCurrentCountry] = useState(""); 
 	const [currentCity, setCurrentCity] = useState();
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity
+          style={{ marginRight: 10 }}
+          title="Logout"
+          onPress={() => {
+            auth.signOut().then(() => {
+              navigation.replace('Login');
+            });
+          }}
+        >
+          <Icon name="logout" size={24} color="#000" />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
 
 	const handleFetchCountries = () => {
 		getVisitedCountries(uid).then((response) => {
@@ -171,4 +190,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProfileSection;
+export default UserScreen;
