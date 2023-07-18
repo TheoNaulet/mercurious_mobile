@@ -43,23 +43,6 @@ export async function getUsername(id: string): Promise<any> {
 }
 
 /**
- * Get the followers of a user by user ID.
- *
- * @async
- * @param {string} userId - The user ID.
- * @returns {Promise<any>} Returns the data of the response if the request is successful.
- * @throws {Error} If the request fails, it throws an error.
- */
-export async function getFollowers(userId: string): Promise<any> {
-    if (userId === undefined)
-        return;
-
-    return axiosInstance.post(`${process.env.REACT_APP_API_URL}/api/user/getFollowers`, { userId: userId }).then((response) => {
-        return response.data;
-    });
-}
-
-/**
  * Get the followings of a user by user ID.
  *
  * @async
