@@ -44,7 +44,7 @@ const CityScreen = ({ route, navigation }) => {
         {placeList && (
           <View style={styles.placesContainer}>
             {placeList.map((place, index) => (
-              <CardFeed navigation={navigation} key={index} id={place._id} name={place.Name} picture={place.Image} city={place.City} country={place.Country} note={place.Rate} extraImage={place.ExtraImage} visitors={0}/>
+              <CardFeed navigation={navigation} key={index} id={place._id}/>
               ))}
           </View>
         )}
