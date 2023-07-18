@@ -49,7 +49,7 @@ const HomeScreen = ({navigation}) => {
         {places && (
           <View style={styles.placesContainer}>
             {places.map((val, key) => (
-              <CardFeed navigation={navigation} key={key} id={val._id} name={val.Name} picture={val.Image} city={val.City} country={val.Country} note={val.Rate} extraImage={val.ExtraImage} visitors={undefined}/>
+              <CardFeed navigation={navigation} key={key} id={val._id}/>
             ))}
           </View>
         )}
