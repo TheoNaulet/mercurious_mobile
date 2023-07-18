@@ -35,7 +35,7 @@ export async function getUsername(id: string): Promise<any> {
 		return; 
 
 	try {
-		const response = await axiosInstance.get(`${process.env.REACT_APP_API_URL}/getUsername/${id}`);
+		const response = await axiosInstance.post(`${process.env.REACT_APP_API_URL}/api/user/getUsernameById`, { userId: id });
 		return response.data;
 	} catch (error) {
 		console.log(error);
@@ -51,12 +51,12 @@ export async function getUsername(id: string): Promise<any> {
  * @throws {Error} If the request fails, it throws an error.
  */
 export async function getFollowers(userId: string): Promise<any> {
-	if (userId === undefined)
-		return;
+    if (userId === undefined)
+        return;
 
-	return axiosInstance.get(`${process.env.REACT_APP_API_URL}/getFollowers/${userId}`).then((response) => {
-		return response.data;
-	});
+    return axiosInstance.post(`${process.env.REACT_APP_API_URL}/api/user/getFollowers`, { userId: userId }).then((response) => {
+        return response.data;
+    });
 }
 
 /**
@@ -67,11 +67,11 @@ export async function getFollowers(userId: string): Promise<any> {
  * @returns {Promise<any>} Returns the data of the response if the request is successful.
  * @throws {Error} If the request fails, it throws an error.
  */
-export async function getFollowings(userId: string): Promise<any> {
+export async function getFollowDetails(userId: string): Promise<any> {	
 	if (userId === undefined)
 		return;
 
-	return axiosInstance.get(`${process.env.REACT_APP_API_URL}/getFollowings/${userId}`).then((response) => {
+	return axiosInstance.post(`${process.env.REACT_APP_API_URL}/api/user/getFollowDetails`, { userId: userId }).then((response) => {
 		return response.data;
 	});
 }
@@ -86,7 +86,7 @@ export async function getFollowings(userId: string): Promise<any> {
  * 
  */
 export async function searchUser(query: string): Promise<Object> {
-	return axiosInstance.get(`${process.env.REACT_APP_API_URL}/searchUser/${query}`).then((response) => {
+	return axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/user/searchUser/${query}`).then((response) => {
             return response.data
 	});
 }
@@ -103,8 +103,8 @@ export async function getProfilePicture(userId: string): Promise<string | null> 
 	if (userId === undefined)
 		return null;
 
-	return axiosInstance.get(`${process.env.REACT_APP_API_URL}/getProfilePicture/${userId}`).then((response) => {
-		return response?.data[0]?.Profile_picture;
+	return axiosInstance.post(`${process.env.REACT_APP_API_URL}/api/user/getProfilePicture`, {userId}).then((response) => {
+		return response.data[0].Profile_picture;
 	});
 }
 
@@ -117,7 +117,7 @@ export async function getProfilePicture(userId: string): Promise<string | null> 
  * @returns {Promise<any>} - The response from the server.
  */
 export async function follow(follower: string, followed: string): Promise<any> {
-	return axiosInstance.put(`${process.env.REACT_APP_API_URL}/follow`, {
+	return axiosInstance.put(`${process.env.REACT_APP_API_URL}/api/user/follow`, {
         followed: followed,
         follower : follower
     }).then((response) => {
@@ -134,7 +134,7 @@ export async function follow(follower: string, followed: string): Promise<any> {
  * @returns {Promise<any>} - The response from the server.
  */
 export async function unfollow(follower: string, followed: string): Promise<any> {
-	return axiosInstance.put(`${process.env.REACT_APP_API_URL}/unfollow`, {
+	return axiosInstance.put(`${process.env.REACT_APP_API_URL}/api/user/unfollow`, {
         followed: followed,
         follower : follower
     }).then((response) => {
