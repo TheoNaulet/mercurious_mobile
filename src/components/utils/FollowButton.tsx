@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { TouchableOpacity, Text, StyleSheet, View } from 'react-native';
-import { follow, getFollowers, unfollow } from '../../api/user';
+import { follow, getFollowDetails, unfollow } from '../../api/user';
+import { UserContext } from '../../../context/UserContext';
 
 interface FollowButtonProps {
     followerId: string;
@@ -14,22 +15,34 @@ interface FollowButtonProps {
  */
 const FollowButton: React.FC<FollowButtonProps> = ({ followerId, followedId }) => {
     const [isFollowing, setIsFollowing] = useState(false);
+    const followings = useContext(UserContext); 
 
-    const handleFetchFollowers = async () => {
-        const response = await getFollowers(followedId);
+    useEffect(() => {
+        if(!followerId || !followedId) return;
 
-        if (response && response[0] && response[0].Followers) {
-            setIsFollowing(response[0].Followers.includes(followerId));
+        if (followings && followings?.followings?.includes(followedId)) {
+            setIsFollowing(true);
         } else {
             setIsFollowing(false);
         }
-    };
+    }, [followerId, followedId, followings])
 
-    useEffect(()=>{
-        if(!followerId || !followedId) return;
+    // const handleFetchFollowers = async () => {
+    //     const response = await getFollowDetails(followedId);
+    //     console.log(response)
 
-        handleFetchFollowers(); 
-    },[followerId, followedId])
+    //     if (response && response[0] && response[0].Followers) {
+    //         setIsFollowing(response[0].Followers.includes(followerId));
+    //     } else {
+    //         setIsFollowing(false);
+    //     }
+    // };
+
+    // useEffect(()=>{
+    //     if(!followerId || !followedId) return;
+
+    //     handleFetchFollowers(); 
+    // },[followerId, followedId])
 
     const handleFollow = async () => {
         await follow(followerId, followedId);
