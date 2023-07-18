@@ -9,7 +9,7 @@ import { searchUser } from '../api/user';
 const SearchScreen = ({navigation}) => {
   const [query, setQuery] = useState('');
   const [placeList, setPlaceList] = useState(); 
-	const [cityList, setCityList] = useState(); 
+	const [cityList, setCityList] = useState([]); 
 	const [countryList, setCountryList] = useState(); 
   const [userList, setUserList] = useState(); 
 
@@ -21,7 +21,7 @@ const SearchScreen = ({navigation}) => {
   const handleSearch = async () => {
 		try {
 			if(query.length < 3){
-				return
+				return;
 			} else {
 
 				await searchCity(query).then((response)=>{
@@ -69,7 +69,7 @@ const SearchScreen = ({navigation}) => {
         </TouchableOpacity>
       ))}
 
-      {countryList && countryList.map((val, key) => (
+      {countryList && countryList?.map((val, key) => (
         <TouchableOpacity
           key={key}
           style={styles.searchItem}
