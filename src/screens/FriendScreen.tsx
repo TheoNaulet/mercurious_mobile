@@ -59,7 +59,7 @@ const FriendScreen = ({ navigation }) => {
 
 	useEffect(() => {
 		getUsername(friendUserId).then((response)=>{
-			setUsername(response?.Username)
+			setUsername(response)
 		})
 
         getProfilePicture(friendUserId).then((response)=>{
@@ -94,23 +94,24 @@ const FriendScreen = ({ navigation }) => {
 
     return (
     <ScrollView ref={scrollViewRef} contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
-        <Text style={styles.header}>Mon profil</Text>
         <FollowButton followerId={uid} followedId={friendUserId}/>
         <UserProfileInfo username={username} picture={picture} numberCountries={numberCountries}/>  
+        {countryList && countryList.length > 0 ? (
+            <>
         <FlagList countryList={countryList} onSelectCountry={handleSelectCountry} selectedCountry={currentCountry} />
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.visitedCities}>
-            {cityList?.map((city: { _id: React.Key | null | undefined; Name: any; Image: any; }) => (
+            {cityList && cityList?.map((city: { _id: React.Key | null | undefined; Name: any; Image: any; }) => (
                 <CitySelectionCard key={city._id} Name={city.Name} CardImage={city.Image} onSelectCity={() => handleSelectCity(city.Name)}/>
             ))}
         </ScrollView>
-        {
-        currentCity && <Text style={styles.visitedCitiesTitle}>Lieux visités à {currentCity}</Text>
-        }  
+        { currentCity && <Text style={styles.visitedCitiesTitle}>Lieux visités à {currentCity}</Text>}  
         <View style={styles.visitedPlaces}>
-            {placeList?.map((place: { id: string; name: string; picture: string; city: string; country: string; note: number; extraImage: string; }, index: React.Key | null | undefined) => (
-                <CardFeed key={index} id={place.id} name={place.name} picture={place.picture} city={place.city} country={place.country} note={place.note} extraImage={place.extraImage} visitors={undefined} navigation={navigation}/>
+            {placeList && placeList?.map((place: { id: string; name: string; picture: string; city: string; country: string; note: number; extraImage: string; }, index: React.Key | null | undefined) => (
+                <CardFeed key={index} id={place.id} navigation={navigation}/>
             ))}
         </View>
+        </>
+        ) : (<Text style={styles.emptyMessage}>{username} n'a pas encore renseigné</Text>)}
     </ScrollView>
     );
 };
@@ -177,8 +178,11 @@ const styles = StyleSheet.create({
         alignSelf:'center',
         paddingBottom: 20,
         paddingHorizontal:8,
-        width:'96%',
+        width:'100%',
     },
+    emptyMessage:{
+        alignSelf:'center',
+    }
 });
 
 export default FriendScreen;
