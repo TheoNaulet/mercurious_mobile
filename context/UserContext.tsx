@@ -1,14 +1,15 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { User } from 'firebase/auth';
 import { FIREBASE_AUTH } from '../FirebaseConfig';
-import { getFollowers, getFollowings } from '../src/api/user';
+import { getFollowDetails, getUsername } from '../src/api/user';
 
 export const UserContext = createContext<User | null>(null);
 
 export const UserProvider: React.FC = ({ children }) => {
 	const [user, setUser] = useState('')
-	const [followings, setFollowings] = useState(); 
-	const [followers, setFollowers] = useState(); 
+	const [followings, setFollowings] = useState([]); 
+	const [followers, setFollowers] = useState([]); 
+	const [usernameContext, setUsernameContext] = useState('');
 
 	const auth = FIREBASE_AUTH; 
 	const uid = auth?.currentUser?.uid; 
@@ -18,19 +19,21 @@ export const UserProvider: React.FC = ({ children }) => {
             return
 
 		setUser(uid);
+		getUsername(uid).then((response)=>{
+			setUsernameContext(response); 
+		});
 
-        getFollowings(uid).then((response) => {
-            setFollowings(response[0].Followings);
-        });
+		getFollowDetails(uid).then((response)=>{
+			const responseFollowers = JSON.parse(JSON.stringify(response.Followers));
+			const responseFollowings = JSON.parse(JSON.stringify(response.Followings));
 
-
-        getFollowers(uid).then((response) => {
-            setFollowers(response[0].Followers);
-        }) 
+			setFollowers(responseFollowers);
+			setFollowings(responseFollowings); 
+		});
     },[uid])
 
 	return (
-	<UserContext.Provider value={{user, followers, followings}}>
+	<UserContext.Provider value={{user, followers,  followings, usernameContext }}> 
 		{children}
 	</UserContext.Provider>
 	);
