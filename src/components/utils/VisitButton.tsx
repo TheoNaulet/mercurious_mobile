@@ -7,16 +7,11 @@ import { StyleSheet } from 'react-native';
 
 interface VisitButtonProps {
     uid: string;
-    place: {
-        id: string;
-        country: string;
-        city: string;
-        name: string;
-        note: number;
-        picture: string;
-        extraImage: string;
-    };
     id: string;
+    isVisited:boolean;
+    onclick:(value:boolean)=> void;
+    city:string;
+    country:string;
 }
 
 /**
@@ -28,46 +23,54 @@ interface VisitButtonProps {
  * @param {string} props.id - ID of the place.
  * 
  */
-const VisitButton: React.FC<VisitButtonProps> = ({ uid, place, id }) => {
-    const [visited, setVisited] = useState(false);
-    const [country, setCountry] = useState('');
-    const [city, setCity] = useState('');
-
-    useEffect(() => {
-        if (!uid || !place || !id ) return;
-
-        setCountry(place.country);
-        setCity(place.city);
-
-        fetchData();
-    }, [uid, id]);
+const VisitButton: React.FC<VisitButtonProps> = ({ isVisited, onclick, uid, city, country, id }) => {
+    const [countryId, setCountryId] = useState('');
+    const [cityId, setCityId] = useState('');
 
     const onVisit = async () => {
-        if (visited) {
-            unvisitPlace(uid, place);
+        await fetchData(); 
+        
+        if (isVisited) {
+            unvisitPlace(uid, id);
         } else {
             try {
-                visitPlace(uid, place);
-                const countryVisit = await getCountryByName(country);
-                visitCountry(uid, countryVisit[0]);
-                const cityVisit = await getCityByName(city);
-                visitCity(uid, cityVisit[0]);
+                visitPlace(uid, id);
+                visitCountry(uid, countryId);
+                visitCity(uid, cityId);
             } catch (error) {
                 console.log('error:', error);
             }
         }
-        setVisited(!visited);
+        onclick(!isVisited);
     };
 
     const fetchData = async () => {
-        await isVisited(id, uid).then((response) => {
-            setVisited(response);
+        await getCityByName(city).then((response)=>{
+            if (response && response.length > 0) {
+                const cityId = response[0]._id;
+                setCityId(cityId);
+            } else {
+                console.error('No city found for given name:', city);
+            }
+        }).catch((error) => {
+            console.error('An error occurred while getting city by name:', error);
+        });
+
+        await getCountryByName(country).then((response)=>{
+            if (response && response.length > 0) {
+                const data = response[0]._id;
+                setCountryId(data);
+            } else {
+                console.error('No country found for given name:', country);
+            }
+        }).catch((error) => {
+            console.error('An error occurred while getting city by name:', error);
         });
     };
 
     return (
         <TouchableOpacity onPress={onVisit} style={styles.visitedButton}>
-            <Text>{visited ? 'Visité ✅' : 'Déjà visité ?'}</Text>
+            <Text>{isVisited ? 'Visité ✅' : 'Déjà visité ?'}</Text>
         </TouchableOpacity>
     );
 };
