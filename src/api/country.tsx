@@ -1,16 +1,22 @@
 import axiosInstance from "./interceptor";
 
 /**
- * Fetch all countries.
+ * Fetch all countries with pagination.
  *
  * @async
+ * @param {number} page - The page number to return.
  * @returns {Promise<any>} Returns the data of the response with all countries.
  */
-export async function getCountries(): Promise<any> {
-    return axiosInstance.get(`${process.env.REACT_APP_API_URL}/getAllCountries`).then((response) => {
-        return(response.data);
+export async function getCountries(page: number = 1): Promise<any> {
+    return axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/country/getAllCountries`, {
+        params: {
+            page: page,
+        },
+    }).then((response) => {
+        return response.data;
     });
 }
+
 
 /**
  * Fetch countries by continent.
@@ -20,7 +26,7 @@ export async function getCountries(): Promise<any> {
  * @returns {Promise<any>} Returns the data of the response with countries from the specified continent.
  */
 export async function getCountriesByContinent(continent: string): Promise<any> {
-    return axiosInstance.get(`${process.env.REACT_APP_API_URL}/getContinent/${continent}`).then((response) => {
+    return axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/country/getCountriesByContinent/${continent}`).then((response) => {
         return(response.data);
     });
 }
@@ -33,7 +39,7 @@ export async function getCountriesByContinent(continent: string): Promise<any> {
  * @returns {Promise<any>} Returns the data of the response with the search results.
  */
 export async function searchCountry(query: string): Promise<any> {
-	return axiosInstance.get(`${process.env.REACT_APP_API_URL}/searchCountry/${query}`).then((response) => {
+	return axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/country/searchCountry/${query}`).then((response) => {
             return response.data
 	});
 }
@@ -49,7 +55,7 @@ export async function getLikedCountries(id: string): Promise<any> {
     if(!id){
 		return;
 	}
-	return axiosInstance.get(`${process.env.REACT_APP_API_URL}/getLikedCountries/${id}`).then((response) => {
+	return axiosInstance.post(`${process.env.REACT_APP_API_URL}/api/user/getLikedCountries`, { userId: id }).then((response) => {
 		return response.data;
 	});
 }
@@ -64,7 +70,7 @@ export async function getLikedCountries(id: string): Promise<any> {
  */
 export async function getCountryByName(name: string): Promise<any> {
     try {
-        return axiosInstance.get(`${process.env.REACT_APP_API_URL}/getCountryByName${name}`).then((response) => {
+        return axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/country/getCountryByName/${name}`).then((response) => {
             return response.data;
         });
     } catch (error) {
@@ -76,14 +82,14 @@ export async function getCountryByName(name: string): Promise<any> {
  * Like a country.
  *
  * @async
- * @param {string} id - The user ID.
- * @param {any} liked - The country object to like.
+ * @param {string} uid - The user ID.
+ * @param {any} countryId - The country object to like.
  * @returns {Promise<any>} Returns the response of the request.
  */
-export async function likeCountry(id: string, liked: any): Promise<any> {
-	return axiosInstance.put(`${process.env.REACT_APP_API_URL}/likeCountry`, {
-        userId: id,
-        liked : liked
+export async function likeCountry(uid: string, countryId: string): Promise<any> {
+	return axiosInstance.put(`${process.env.REACT_APP_API_URL}/api/user/likeCountry`, {
+        userId: uid,
+        countryId : countryId
     }).then((response) => {
 		return response;
 	});
@@ -97,10 +103,10 @@ export async function likeCountry(id: string, liked: any): Promise<any> {
  * @param {any} visited - The country object to mark as visited.
  * @returns {Promise<any>} Returns the response of the request.
  */
-export async function visitCountry(id: string, visited: any): Promise<any> {
-	return axiosInstance.put(`${process.env.REACT_APP_API_URL}/visitCountry`, {
+export async function visitCountry(id: string, visited: string): Promise<any> {
+	return axiosInstance.put(`${process.env.REACT_APP_API_URL}/api/user/visitCountry`, {
         userId: id,
-        visited : visited
+        country : visited
     }).then((response) => {
 		return response;
 	});
@@ -117,7 +123,7 @@ export async function getVisitedCountries(id: string): Promise<any> {
     if(!id){
 		return;
 	}
-	return axiosInstance.get(`${process.env.REACT_APP_API_URL}/getVisitedCountries${id}`).then((response) => {
+	return axiosInstance.post(`${process.env.REACT_APP_API_URL}/api/user/getVisitedCountries`, { userId: id }).then((response) => {
 		return response.data;
 	});
 }
