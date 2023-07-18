@@ -8,7 +8,19 @@ import axiosInstance from "./interceptor";
  * @throws {Error} Logs error details if the request fails.
  */
 export async function getPlacesFeed(): Promise<any> {
-	return axiosInstance.get(`${process.env.REACT_APP_API_URL}/getPlacesFeed`).then((response) => {
+	return axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/places/getPlacesFeed`).then((response) => {
+		return response.data;
+	}).catch((error) => {
+		console.error('Erreur axios:', error);
+        console.error('Détails de l\'erreur:', error.response);}
+)}
+
+
+export async function getPlaceByIdAndUserInteractions(placeId: string, userId: string): Promise<any> {
+	if (placeId === undefined || userId === undefined)
+		return;
+
+	return axiosInstance.post(`${process.env.REACT_APP_API_URL}/api/user/getPlaceByIdAndUserInteractions`, { placeId: placeId, userId: userId }).then((response) => {
 		return response.data;
 	}).catch((error) => {
 		console.error('Erreur axios:', error);
@@ -23,7 +35,7 @@ export async function getPlacesFeed(): Promise<any> {
  * @returns {Promise<any>} Returns the data of the response.
  */
 export async function searchPlace(query: string): Promise<any> {
-	return axiosInstance.get(`${process.env.REACT_APP_API_URL}/searchPlace/${query}`).then((response) => {
+	return axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/places/searchPlace/${query}`).then((response) => {
             return response.data
 	});
 }
@@ -36,7 +48,7 @@ export async function searchPlace(query: string): Promise<any> {
  * @returns {Promise<any>} Returns the data of the response.
  */
 export async function getPlacesByCity(city: string): Promise<any> {
-	return axiosInstance.get(`${process.env.REACT_APP_API_URL}/getPlaces${city}`).then((response) => {
+	return axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/places/getPlacesByCity/${city}`).then((response) => {
 		return response.data;
 	});
 }
@@ -47,14 +59,15 @@ type Place = { id: string; city: string; country: string; name: string; note: nu
  * Like a place.
  *
  * @async
- * @param {string} id - The user ID.
- * @param {Place} liked - The place object to like.
+ * @param {string} uid - The user ID.
+ * @param {string} id - The place object to like.
  * @returns {Promise<any>} Returns the response of the request.
  */
-export async function likePlace(id: string, liked: Place): Promise<any> {
-	return axiosInstance.put(`${process.env.REACT_APP_API_URL}/likePlace`, {
-        userId: id,
-        liked : liked
+export async function likePlace(uid: string, id: string, city: string): Promise<any> {
+	return axiosInstance.put(`${process.env.REACT_APP_API_URL}/api/user/likePlace`, {
+        userId: uid,
+        liked : id,
+		city: city
     }).then((response) => {
 		return response;
 	});
@@ -64,14 +77,14 @@ export async function likePlace(id: string, liked: Place): Promise<any> {
  * Unlike a place.
  *
  * @async
- * @param {string} id - The user ID.
- * @param {Place} liked - The place object to unlike.
+ * @param {string} uid - The user ID.
+ * @param {string} id - The place object to unlike.
  * @returns {Promise<any>} Returns the response of the request.
  */
-export async function unlikePlace(id: string, liked: Place): Promise<any> {
-	return axiosInstance.put(`${process.env.REACT_APP_API_URL}/unlikePlace`, {
-        userId: id,
-        liked : liked
+export async function unlikePlace(uid: string, id: string): Promise<any> {
+	return axiosInstance.put(`${process.env.REACT_APP_API_URL}/api/user/unlikePlace`, {
+        userId: uid,
+        unlike : id
     }).then((response) => {
 		return response;
 	});
@@ -99,14 +112,14 @@ export async function isLiked(id: string, userId: string): Promise<any> {
  * Unvisit a place.
  *
  * @async
- * @param {string} id - The user ID.
- * @param {Place} visit - The place object to unvisit.
+ * @param {string} uid - The user ID.
+ * @param {string} placeId - The place id to unvisit.
  * @returns {Promise<any>} Returns the response of the request.
  */
-export async function unvisitPlace(id: string, visit: Place): Promise<any>  {
-	return axiosInstance.put(`${process.env.REACT_APP_API_URL}/unvisitPlace`, {
-        userId: id,
-        visit : visit
+export async function unvisitPlace(uid: string, placeId: string): Promise<any>  {
+	return axiosInstance.put(`${process.env.REACT_APP_API_URL}/api/user/unvisitPlace`, {
+        userId: uid,
+        unvisit : placeId
     }).then((response) => {
 		return response;
 	});
@@ -135,12 +148,12 @@ export async function isVisited(id: string, userId: string): Promise<any> {
  *
  * @async
  * @param {string} id - The user ID.
- * @param {Place} visit - The place object to visit.
+ * @param {string} visit - The place id to visit.
  * @returns {Promise<any>} Returns the response of the request.
  * @throws {Error} Throws error if the request fails.
  */
-export async function visitPlace(id: string, visit: Place): Promise<any> { 
-    return axiosInstance.put(`${process.env.REACT_APP_API_URL}/visitPlace`, {
+export async function visitPlace(id: string, visit: string): Promise<any> { 
+    return axiosInstance.put(`${process.env.REACT_APP_API_URL}/api/user/visitPlace`, {
         userId: id,
         visit: visit
     }).then(response => {
@@ -184,10 +197,11 @@ export async function getVisitedPlaces(id: string | undefined, city: string): Pr
 		return;
 	}
 
-	return axiosInstance.get(`${process.env.REACT_APP_API_URL}/getVisitedPlacesByCity/${id}/${city}`).then((response) => {
+	return axiosInstance.post(`${process.env.REACT_APP_API_URL}/api/user/getVisitedPlacesByCity`, { userId:id , city: city }).then((response) => {
 		return response.data;
 	});
 }
+
 
 /**
  * Get place by ID.
@@ -211,7 +225,8 @@ export async function getPlaceById(id: any): Promise<any> {
  * @returns {Promise<any>} Returns the data of the response with the liked places.
  */
 export async function getLikedPlacesByCity(id: any, city: any): Promise<any> {
-	return axiosInstance.get(`${process.env.REACT_APP_API_URL}/getLikedPlacesByCity/${id}/${city}`).then((response) => {
-		return response.data; 
-	});
+	return axiosInstance.post(`${process.env.REACT_APP_API_URL}/api/user/getLikedPlacesByCity`, { userId:id, city:city })
+		.then((response) => {
+			return response.data;
+		});
 }
