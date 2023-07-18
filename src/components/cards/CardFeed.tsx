@@ -1,54 +1,61 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Icon, Image } from 'react-native-elements';
 import { FIREBASE_AUTH } from '../../../FirebaseConfig';
-import IsFriendVisit from '../utils/isFriendVisit';
 import LikeButton from '../utils/LikeButton';
 import VisitButton from '../utils/VisitButton';
+import { getPlaceByIdAndUserInteractions } from '../../api/places';
+import FriendVisit from '../utils/isFriendVisit';
 
 interface CardFeedProps {
     id: string;
-    city: string;
-    country: string;
-    name: string;
-    visitors: number;
-    note: number;
-    picture: string;
-    extraImage: string;
     navigation: any;
 }
 
-const CardFeed: React.FC<CardFeedProps> = ({ id, city, country, name, visitors, note, picture, extraImage, navigation }) => {
+const CardFeed: React.FC<CardFeedProps> = ({ id, navigation }) => {
+	const [visited, setVisited] = useState(false);
+	const [liked, setLiked] = useState(false);
+	const [place, setPlace] = useState({});
+	const [visitorsFollow, setVisitorsFollow] = useState();
+
 	const auth = FIREBASE_AUTH; 
 	const uid = auth?.currentUser?.uid; 
 
-	const place = {id:id, city:city, country:country, name:name, note:note, picture:picture, extraImage:extraImage}
+	useEffect(()=>{
+		if(!id || !uid ) return;
+		getPlaceByIdAndUserInteractions(id, uid).then((data) => {
+			setVisitorsFollow(data.visitedByFollowing)
+			setVisited(data.isVisited);
+			setLiked(data.isLiked);
+			setPlace(data.place)
+		});
+	},[id, uid])
+
 
 	return (
 		<View style={styles.card}>
 			<View style={styles.imageContainer}>
-				<Image style={styles.image} source={{ uri: picture }} />
+				<Image style={styles.image} source={{ uri: place.Image }} />
 				<View style={styles.likeButtonContainer}>
-					<LikeButton uid={uid} place={place} id={id}/>
+					<LikeButton isLiked={liked} onclick={setLiked} uid={uid} id={id} city={place.City} country={place.Country}/>
 				</View>
-		
 			</View>
 			<View style={styles.cardInfos}>
 				<View style={styles.nameContainer}>
-					<Text style={styles.name}>{name}</Text>
-					{note && (
+					<Text style={styles.name}>{place.Name}</Text>
+					{place.Rate && (
 						<View style={styles.noteContainer}>
 							<Icon name="star" color="#FFD700" type="font-awesome" size={20} />
-							<Text style={styles.noteText}>{note}</Text>
+							<Text style={styles.noteText}>{place.Rate}</Text>
 						</View>
 					)}
 				</View>
-				<TouchableOpacity style={styles.cityCountry} onPress={() => navigation.navigate('CityScreen', {city: city})}>
-					<Text style={styles.CityText}>{city}, {country}</Text>
+				<TouchableOpacity style={styles.cityCountry} onPress={() => navigation.navigate('CityScreen', {city: place.City})}>
+					<Text style={styles.CityText}>{place.City}, {place.Country}</Text>
 				</TouchableOpacity>
 				<View style={styles.bottomInfos}>
-					<IsFriendVisit placeId={id}/>
-					<VisitButton place={place} id={id} uid={uid} />
+					<FriendVisit visitorsId={visitorsFollow}/>
+					<VisitButton isVisited={visited} onclick={setVisited} id={place.id} uid={uid} city={place.City} country={place.Country}/>
 				</View>
 			</View>
 		</View>
