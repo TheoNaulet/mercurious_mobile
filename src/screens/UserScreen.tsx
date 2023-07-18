@@ -1,8 +1,7 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, Image, ScrollView, StyleSheet } from 'react-native';
+import React, { useEffect, useState, useRef, useContext } from 'react';
+import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { getVisitedCountries } from '../api/country';
 import { getVisitedPlaces } from '../api/places';
-import { getUsername } from '../api/user';
 import { getVisitedCitiesByCountry } from '../api/city';
 import { FIREBASE_AUTH } from '../../FirebaseConfig';
 import FlagList from '../components/utils/FlagList';
@@ -10,11 +9,13 @@ import CitySelectionCard from '../components/cards/SelectCard';
 import CardFeed from '../components/cards/CardFeed';
 import UserProfileInfo from '../components/utils/UserProfileInfos';
 import { useIsFocused } from '@react-navigation/native';
+import { UserContext } from '../../context/UserContext';
 
 const ProfileSection = ({navigation}) => {
   const auth = FIREBASE_AUTH; 
   const uid = auth?.currentUser?.uid; 
   const isFocused = useIsFocused();
+  const { usernameContext } = useContext(UserContext);
 
   const picture = undefined;
 
@@ -26,6 +27,7 @@ const ProfileSection = ({navigation}) => {
 	const [numberCountries, setNumberCountries] = useState(Number);
 	const [currentCountry, setCurrentCountry] = useState(""); 
 	const [currentCity, setCurrentCity] = useState();
+  
 
 	const handleFetchCountries = () => {
 		getVisitedCountries(uid).then((response) => {
@@ -53,9 +55,7 @@ const ProfileSection = ({navigation}) => {
   }, [isFocused]); 
 
 	useEffect(() => {
-		getUsername(uid).then((response)=>{
-			setUsername(response?.Username)
-		})
+		setUsername(usernameContext);
 	}, [uid]);
   
   useEffect(()=>{
@@ -89,7 +89,7 @@ const ProfileSection = ({navigation}) => {
       <UserProfileInfo username={username} picture={picture} numberCountries={numberCountries}/>  
       <FlagList countryList={countryList} onSelectCountry={handleSelectCountry} selectedCountry={currentCountry} />
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.visitedCities}>
-        {cityList?.map((city: { _id: React.Key | null | undefined; Name: any; Image: any; }) => (
+        {cityList?.map((city: { _id: React.Key; Name: any; Image: any; }) => (
           <CitySelectionCard key={city._id} Name={city.Name} CardImage={city.Image} onSelectCity={() => handleSelectCity(city.Name)}/>
         ))}
       </ScrollView>
@@ -97,8 +97,8 @@ const ProfileSection = ({navigation}) => {
         currentCity && <Text style={styles.visitedCitiesTitle}>Lieux visités à {currentCity}</Text>
       }  
       <View style={styles.visitedPlaces}>
-        {placeList?.map((place: { id: string; name: string; picture: string; city: string; country: string; note: number; extraImage: string; }, index: React.Key | null | undefined) => (
-          <CardFeed key={index} id={place.id} name={place.name} picture={place.picture} city={place.city} country={place.country} note={place.note} extraImage={place.extraImage} visitors={undefined} navigation={navigation}/>
+        {placeList?.map((place: { id: string; name: string; picture: string; city: string; country: string; note: number; extraImage: string; }) => (
+          <CardFeed key={place.id} id={place.id} navigation={navigation}/>
         ))}
       </View>
     </ScrollView>
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
     alignSelf:'center',
     paddingBottom: 20,
     paddingHorizontal:8, 
-    width:'96%',
+    width:'100%',
   },
 });
 
