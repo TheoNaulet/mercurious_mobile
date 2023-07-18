@@ -50,9 +50,8 @@ const FlagItem: React.FC<FlagItemProps> = ({ country, onSelect, isSelected }: Fl
 const FlagList: React.FC<FlagListProps> = ({ countryList, onSelectCountry, selectedCountry }: FlagListProps): JSX.Element => (
     <FlatList
         data={countryList}
-        keyExtractor={(item) => item._id}
         renderItem={({ item }) => (
-            <FlagItem country={item} onSelect={onSelectCountry} isSelected={selectedCountry?._id === item._id}/>
+            <FlagItem key={item._id} country={item} onSelect={onSelectCountry} isSelected={selectedCountry?._id === item._id}/>
         )}
         horizontal={true}
         contentContainerStyle={styles.flagList}
