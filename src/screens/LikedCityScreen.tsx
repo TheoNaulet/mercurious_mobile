@@ -69,7 +69,7 @@ const LikedCityScreen = () => {
             <View style={styles.placesContainer}>
                 {placeList?.map((val, key) => (
                     <View key={key} style={styles.cardContainer}>
-                        <CardFeed navigation={navigation} id={val.id} name={val.name} picture={val.picture} city={val.city} country={val.country} note={val.Rate} extraImage={val.extraImage} visitors={0}/>
+                        <CardFeed navigation={navigation} id={val.id}/>
                     </View>
                 ))}
             </View>
