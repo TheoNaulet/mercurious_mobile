@@ -3,20 +3,15 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { getCountryByName, likeCountry } from '../../api/country';
 import { getCityByName, likeCity } from '../../api/city';
-import { isLiked, likePlace, unlikePlace } from '../../api/places';
+import { likePlace, unlikePlace } from '../../api/places';
 
 interface LikeButtonProps {
     uid: string;
-    place: {
-        id: string;
-        country: string;
-        city: string;
-        name: string;
-        note: number;
-        picture: string;
-        extraImage: string;
-    };
     id: string;
+    city:string;
+    country:string;
+    onclick: (value:boolean) => void; 
+    isLiked: boolean;
 }
 
 /**
@@ -24,43 +19,51 @@ interface LikeButtonProps {
  * 
  * @param {LikeButtonProps} props - Props passed down to the LikeButton component.
  */
-const LikeButton: React.FC<LikeButtonProps> = ({ uid, place, id }) => {
-    const [liked, setLiked] = useState(false);
-    const [country, setCountry] = useState('');
-    const [city, setCity] = useState('');
+const LikeButton: React.FC<LikeButtonProps> = ({ uid, city, country, isLiked, onclick, id }: LikeButtonProps) => {
+    const [cityId, setCityId] = useState('');
+    const [countryId, setCountryId] = useState('');
 
     const onLike = async () => {
-        if (liked) {
-            unlikePlace(uid, place);
+        await fetchDatas(); 
+
+        if (isLiked) {
+            unlikePlace(uid, id);
         } else {
-            likePlace(uid, place); 
-            const countryLike = await getCountryByName(country);
-            const cityLike = await getCityByName(city);
-            likeCity(uid, cityLike[0]);
-            likeCountry(uid, countryLike[0]);
+            likePlace(uid, id, city); 
+            likeCity(uid, cityId);
+            likeCountry(uid, countryId);
         }
-    
-        setLiked(!liked);
+        onclick(!isLiked);
     };
 
-    const fetchData = async () => {
-        await isLiked(id, uid).then((response) => {
-            setLiked(response);
+    const fetchDatas = async () => {
+
+        await getCityByName(city).then((response)=>{
+            if (response && response.length > 0) {
+                const cityId = response[0]._id;
+                setCityId(cityId);
+            } else {
+                console.error('No city found for given name:', city);
+            }
+        }).catch((error) => {
+            console.error('An error occurred while getting city by name:', error);
         });
-    };
 
-    useEffect(()=>{
-        if(!uid || !place) return; 
-
-        setCountry(place.country);
-        setCity(place.city);
-
-        fetchData()
-    }, [uid, place])
+        await getCountryByName(country).then((response)=>{
+            if (response && response.length > 0) {
+                const data = response[0]._id;
+                setCountryId(data);
+            } else {
+                console.error('No country found for given name:', country);
+            }
+        }).catch((error) => {
+            console.error('An error occurred while getting city by name:', error);
+        });
+    }
 
     return (
         <TouchableOpacity style={styles.likeButton} onPress={onLike}>
-            <Icon name={liked ? 'heart' : 'heart-o'} color={liked ? '#ff0000' : '#000000'} type="font-awesome"/>
+            <Icon name={isLiked ? 'heart' : 'heart-o'} color={isLiked ? '#ff0000' : '#000000'} type="font-awesome"/>
         </TouchableOpacity>
     );
 };
