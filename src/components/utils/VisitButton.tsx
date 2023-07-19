@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TouchableOpacity, Text } from 'react-native';
-import { isVisited, unvisitPlace, visitPlace } from '../../api/places';
+import { isVisited, unvisitPlace, visitPlace, visitPlaceCityCountry } from '../../api/places';
 import { getCountryByName, visitCountry } from '../../api/country';
 import { getCityByName, visitCity } from '../../api/city';
 import { StyleSheet } from 'react-native';
@@ -24,48 +24,17 @@ interface VisitButtonProps {
  * 
  */
 const VisitButton: React.FC<VisitButtonProps> = ({ isVisited, onclick, uid, city, country, id }) => {
-    const [countryId, setCountryId] = useState('');
-    const [cityId, setCityId] = useState('');
-
     const onVisit = async () => {
-        await fetchData(); 
-        
         if (isVisited) {
             unvisitPlace(uid, id);
         } else {
             try {
-                visitPlace(uid, id);
-                visitCountry(uid, countryId);
-                visitCity(uid, cityId);
+                visitPlaceCityCountry(uid, id, city, country);
             } catch (error) {
                 console.log('error:', error);
             }
         }
         onclick(!isVisited);
-    };
-
-    const fetchData = async () => {
-        await getCityByName(city).then((response)=>{
-            if (response && response.length > 0) {
-                const cityId = response[0]._id;
-                setCityId(cityId);
-            } else {
-                console.error('No city found for given name:', city);
-            }
-        }).catch((error) => {
-            console.error('An error occurred while getting city by name:', error);
-        });
-
-        await getCountryByName(country).then((response)=>{
-            if (response && response.length > 0) {
-                const data = response[0]._id;
-                setCountryId(data);
-            } else {
-                console.error('No country found for given name:', country);
-            }
-        }).catch((error) => {
-            console.error('An error occurred while getting city by name:', error);
-        });
     };
 
     return (
