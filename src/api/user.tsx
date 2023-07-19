@@ -17,7 +17,7 @@ export async function createNewUser(id: string, email: string, Username: string,
         Username = `User${randomNum}`;
     }
 
-	return axiosInstance.post(`${process.env.REACT_APP_API_URL}/createUser`, { userId: id, Email : email,  Username: Username,  picture : picture }).then((response) => {
+	return axiosInstance.post(`${process.env.REACT_APP_API_URL}/api/user/createUser`, { userId: id, Email : email,  Username: Username,  picture : picture }).then((response) => {
 		return ({response, email, id, Username});
 	});
 }
@@ -123,4 +123,38 @@ export async function unfollow(follower: string, followed: string): Promise<any>
     }).then((response) => {
 		return response;
 	});
+}
+
+/**
+ * Search all entities by query.
+ *
+ * @async
+ * @param {string} query - The query to search.
+ * @returns {Promise<any>} Returns the data of the response.
+ */
+export async function searchAll(query: string): Promise<any> {
+	return axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/search/searchAll/${query}`).then((response) => {
+        return response.data;
+	});
+}
+
+
+/**
+ * Get users by their IDs.
+ *
+ * @async
+ * @param {string[]} ids - The user IDs.
+ * @returns {Promise<any>} Returns the data of the response if the request is successful.
+ * @throws {Error} If the request fails or the user IDs are not provided, it throws an error or logs it.
+ */
+export async function getUsersById(ids: string[]): Promise<any> {
+	if(!ids || ids.length === 0)
+		return; 
+
+	try {
+		const response = await axiosInstance.post(`${process.env.REACT_APP_API_URL}/api/user/getUsersById`, { userIds: ids });
+		return response.data;
+	} catch (error) {
+		console.log(error);
+	}
 }
