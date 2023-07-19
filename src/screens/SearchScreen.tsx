@@ -4,7 +4,7 @@ import { searchCity } from '../api/city';
 import { searchCountry } from '../api/country';
 import { searchPlace } from '../api/places';
 import { Icon } from 'react-native-elements';
-import { searchUser } from '../api/user';
+import { searchAll, searchUser } from '../api/user';
 
 const SearchScreen = ({navigation}) => {
   const [query, setQuery] = useState('');
@@ -23,19 +23,24 @@ const SearchScreen = ({navigation}) => {
 			if(query.length < 3){
 				return;
 			} else {
-
-				await searchCity(query).then((response)=>{
-					setCityList(response);
-				})
-				await searchCountry(query).then((response)=>{
-					setCountryList(response);
-				})
-				await searchPlace(query).then((response)=>{
-					setPlaceList(response);
-				})
-        await searchUser(query).then((response)=>{
-					setUserList(response);
-				})
+        await searchAll(query).then((response)=>{
+          setUserList(response.users);
+          setPlaceList(response.places);
+          setCountryList(response.countries);
+          setCityList(response.cities);
+        });
+				// await searchCity(query).then((response)=>{
+				// 	setCityList(response);
+				// })
+				// await searchCountry(query).then((response)=>{
+				// 	setCountryList(response);
+				// })
+				// await searchPlace(query).then((response)=>{
+				// 	setPlaceList(response);
+				// })
+        // await searchUser(query).then((response)=>{
+				// 	setUserList(response);
+				// })
 			}
 				} catch (error) {
 			console.log(error); 
@@ -55,7 +60,7 @@ const SearchScreen = ({navigation}) => {
             onChangeText={(text) => setQuery(text)}
           />
       </View>
-      <ScrollView>
+      <ScrollView scrollEventThrottle={16} onScroll={Keyboard.dismiss}>
       {cityList && cityList.map((val, key) => (
         <TouchableOpacity
           key={key}
@@ -147,13 +152,13 @@ const styles = StyleSheet.create({
     borderBottomColor: '#e0e0e0',
   },
   searchItemText:{
-    fontSize:20,
+    fontSize:15,
     alignSelf:"center",
     marginLeft:10
   },
   itemImage:{
-    height:100,
-    width:100,
+    height:50,
+    width:50,
     borderRadius:100,
   }
 });
