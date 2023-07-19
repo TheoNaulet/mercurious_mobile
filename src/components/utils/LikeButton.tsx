@@ -3,7 +3,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { getCountryByName, likeCountry } from '../../api/country';
 import { getCityByName, likeCity } from '../../api/city';
-import { likePlace, unlikePlace } from '../../api/places';
+import { likePlace, likePlaceCityCountry, unlikePlace } from '../../api/places';
 
 interface LikeButtonProps {
     uid: string;
@@ -20,46 +20,14 @@ interface LikeButtonProps {
  * @param {LikeButtonProps} props - Props passed down to the LikeButton component.
  */
 const LikeButton: React.FC<LikeButtonProps> = ({ uid, city, country, isLiked, onclick, id }: LikeButtonProps) => {
-    const [cityId, setCityId] = useState('');
-    const [countryId, setCountryId] = useState('');
-
     const onLike = async () => {
-        await fetchDatas(); 
-
         if (isLiked) {
             unlikePlace(uid, id);
         } else {
-            likePlace(uid, id, city); 
-            likeCity(uid, cityId);
-            likeCountry(uid, countryId);
+            likePlaceCityCountry(uid, id, city, country);
         }
         onclick(!isLiked);
     };
-
-    const fetchDatas = async () => {
-
-        await getCityByName(city).then((response)=>{
-            if (response && response.length > 0) {
-                const cityId = response[0]._id;
-                setCityId(cityId);
-            } else {
-                console.error('No city found for given name:', city);
-            }
-        }).catch((error) => {
-            console.error('An error occurred while getting city by name:', error);
-        });
-
-        await getCountryByName(country).then((response)=>{
-            if (response && response.length > 0) {
-                const data = response[0]._id;
-                setCountryId(data);
-            } else {
-                console.error('No country found for given name:', country);
-            }
-        }).catch((error) => {
-            console.error('An error occurred while getting city by name:', error);
-        });
-    }
 
     return (
         <TouchableOpacity style={styles.likeButton} onPress={onLike}>
