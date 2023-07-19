@@ -15,6 +15,21 @@ export async function getPlacesFeed(): Promise<any> {
         console.error('Détails de l\'erreur:', error.response);}
 )}
 
+/**
+ * Get places feed.
+ *
+ * @async
+ * @returns {Promise<any>} Returns the data of the response.
+ * @throws {Error} Logs error details if the request fails.
+ */
+export async function getNewPlacesFeed(): Promise<any> {
+	return axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/places/getNewPlacesFeed`).then((response) => {
+		return response.data;
+	}).catch((error) => {
+		console.error('Erreur axios:', error);
+        console.error('Détails de l\'erreur:', error.response);}
+)}
+
 
 export async function getPlaceByIdAndUserInteractions(placeId: string, userId: string): Promise<any> {
 	if (placeId === undefined || userId === undefined)
@@ -229,4 +244,45 @@ export async function getLikedPlacesByCity(id: any, city: any): Promise<any> {
 		.then((response) => {
 			return response.data;
 		});
+}
+
+
+export async function getAllPlacesByIdAndUserInteractions(placeIds: string[], userId: string): Promise<any> {
+	if (!placeIds || !userId)
+		return;
+
+	return axiosInstance.post(`${process.env.REACT_APP_API_URL}/api/search/getAllPlacesByIdAndUserInteractions`, { placeIds: placeIds, userId: userId }).then((response) => {
+		return response.data;
+	}).catch((error) => {
+		console.error('Erreur axios:', error);
+        console.error('Détails de l\'erreur:', error.response);}
+)}
+
+
+export async function visitPlaceCityCountry(id: string, place: any, city: any, country: any): Promise<any> {
+    return axiosInstance.put(`${process.env.REACT_APP_API_URL}/api/user/visitPlaceCityCountry`, {
+        userId: id,
+        place: place,
+        city: city,
+        country: country
+    }).then(response => {
+        return response;
+    }).catch(error => {
+        console.error(error);
+        throw error;
+    });
+}
+
+export async function likePlaceCityCountry(id: string, place: any, city: any, country: any): Promise<any> {
+    return axiosInstance.put(`${process.env.REACT_APP_API_URL}/api/user/likePlaceCityCountry`, {
+        userId: id,
+        place: place,
+        city: city,
+        country: country
+    }).then(response => {
+        return response;
+    }).catch(error => {
+        console.error(error);
+        throw error;
+    });
 }
