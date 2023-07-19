@@ -31,10 +31,10 @@ const ProfileSection = ({navigation}) => {
 
 	const handleFetchCountries = () => {
 		getVisitedCountries(uid).then((response) => {
-			if(response[0]?.Visited_countries.length === 0){
+			if(response[0]?.length === 0){
 				setCountryList(undefined);
 			} else {
-				setCountryList(response[0].Visited_countries);
+				setCountryList(response);
 			}
 		});
 	};
@@ -69,7 +69,7 @@ const ProfileSection = ({navigation}) => {
 			return; 
 
 		getVisitedCitiesByCountry(uid, currentCountry.countryName).then((response) =>{
-			setCityList(response[0].Visited_cities); 
+			setCityList(response); 
 		})
 	}, [currentCountry]);
 
@@ -79,7 +79,7 @@ const ProfileSection = ({navigation}) => {
 		return; 
 
 		getVisitedPlaces(uid, currentCity).then((response)=>{
-			setPlaceList(response[0].Visited_monuments);
+			setPlaceList(response);
 		})
 	}, [currentCity]);
 
@@ -89,16 +89,17 @@ const ProfileSection = ({navigation}) => {
       <UserProfileInfo username={username} picture={picture} numberCountries={numberCountries}/>  
       <FlagList countryList={countryList} onSelectCountry={handleSelectCountry} selectedCountry={currentCountry} />
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.visitedCities}>
-        {cityList?.map((city: { _id: React.Key; Name: any; Image: any; }) => (
-          <CitySelectionCard key={city._id} Name={city.Name} CardImage={city.Image} onSelectCity={() => handleSelectCity(city.Name)}/>
-        ))}
+        {cityList?.map((city: { id: string; Name: any; Image: any; }) => (
+          <CitySelectionCard key={city.id} Name={city.Name} CardImage={city.Image} onSelectCity={() => handleSelectCity(city.Name)}/>
+          ))}
       </ScrollView>
       {
         currentCity && <Text style={styles.visitedCitiesTitle}>Lieux visités à {currentCity}</Text>
       }  
       <View style={styles.visitedPlaces}>
-        {placeList?.map((place: { id: string; name: string; picture: string; city: string; country: string; note: number; extraImage: string; }) => (
-          <CardFeed key={place.id} id={place.id} navigation={navigation}/>
+        {placeList?.map((place: { id: string; }) => (
+
+          <CardFeed key={place} id={place} navigation={navigation}/>
         ))}
       </View>
     </ScrollView>
