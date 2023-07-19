@@ -1,9 +1,14 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, RefreshControl, Dimensions } from 'react-native';
-import { getPlacesFeed } from '../api/places';
+import { getAllPlacesByIdAndUserInteractions, getNewPlacesFeed, getPlacesFeed } from '../api/places';
 import CardFeed from '../components/cards/CardFeed';
+import { FIREBASE_AUTH } from '../../FirebaseConfig';
 
 const HomeScreen = ({navigation}) => {
+
+  const auth = FIREBASE_AUTH; 
+  const uid = auth?.currentUser?.uid; 
+
   const [places, setPlaces] = useState([]);
   const [error, setError] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
@@ -12,6 +17,16 @@ const HomeScreen = ({navigation}) => {
   const fetchPlaces = async (nextPage) => {
     try {
       const data = await getPlacesFeed(nextPage);
+      // let test = await getNewPlacesFeed();
+      // test = JSON.parse(JSON.stringify(test));
+
+      // console.log('TEST 1 '   test); 
+      // const test2 = await getAllPlacesByIdAndUserInteractions(test, uid);
+      
+      // console.log('test 2 = ' + test2); 
+      // console.log('test ===========' + test);
+      // const test = await getAllPlacesByIdAndUserInteractions(data, uid); 
+      // console.log(test);
       setPlaces(prevPlaces => [...prevPlaces, ...data]);
     } catch (error) {
       setError(error.message);
