@@ -25,21 +25,22 @@ interface FlagListProps {
  * @param {FlagItemProps} props - The properties for FlagItem component.
  * @returns {JSX.Element} Returns the FlagItem component.
  */
-const FlagItem: React.FC<FlagItemProps> = ({ country, onSelect, isSelected }: FlagItemProps): JSX.Element => (
-    <TouchableOpacity onPress={() => onSelect(country)}>
-        <View style={[styles.flagItem, isSelected ? styles.selectedFlag : null]}>
-            <ImageBackground
-                source={{ uri: country.flag }}
-                style={styles.flagBackground}
-                imageStyle={{ borderRadius: 50 }}
-            >
-                <View style={styles.overlay}>
-                    <Text style={styles.countryName}>{country.countryName}</Text>
-                </View>
-            </ImageBackground>
-        </View>
-    </TouchableOpacity>
-);
+const FlagItem: React.FC<FlagItemProps> = ({ country, onSelect, isSelected }: FlagItemProps): JSX.Element => {
+    return (
+        <TouchableOpacity onPress={() => onSelect(country)}>
+            <View style={[styles.flagItem, isSelected ? styles.selectedFlag : null]}>
+                <ImageBackground
+                    source={{ uri: country.flag }}
+                    style={styles.flagBackground}
+                    imageStyle={{ borderRadius: 50 }}
+                >
+                    <View style={styles.overlay}>
+                        <Text style={styles.countryName}>{country.countryName}</Text>
+                    </View>
+                </ImageBackground>
+            </View>
+        </TouchableOpacity>
+)};
 
 /**
  * FlagList component that renders a horizontal list of FlagItems.
@@ -47,17 +48,19 @@ const FlagItem: React.FC<FlagItemProps> = ({ country, onSelect, isSelected }: Fl
  * @param {FlagListProps} props - The properties for FlagList component.
  * @returns {JSX.Element} Returns the FlagList component.
  */
-const FlagList: React.FC<FlagListProps> = ({ countryList, onSelectCountry, selectedCountry }: FlagListProps): JSX.Element => (
-    <FlatList
-        data={countryList}
-        renderItem={({ item }) => (
-            <FlagItem key={item._id} country={item} onSelect={onSelectCountry} isSelected={selectedCountry?._id === item._id}/>
-        )}
-        horizontal={true}
-        contentContainerStyle={styles.flagList}
-        showsHorizontalScrollIndicator={false}
-    />
-);
+const FlagList: React.FC<FlagListProps> = ({ countryList, onSelectCountry, selectedCountry }: FlagListProps): JSX.Element => {
+    return(
+        <FlatList
+            data={countryList}
+            renderItem={({ item }) => (
+                <FlagItem key={item.id} country={item} onSelect={onSelectCountry} isSelected={selectedCountry?.id === item.id}/>
+                
+            )}
+            horizontal={true}
+            contentContainerStyle={styles.flagList}
+            showsHorizontalScrollIndicator={false}
+    />)
+};
 
 
 const styles = StyleSheet.create({
