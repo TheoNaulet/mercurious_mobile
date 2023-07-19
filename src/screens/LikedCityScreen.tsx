@@ -21,13 +21,12 @@ const LikedCityScreen = () => {
 
     const fetchLikedCities = async () => {
         const response = await getLikedCitiesByCountry(uid, countryName);
-        const result = response[0].Liked_cities;
-        setCityList(result);
+        setCityList(response);
     }
 
     const fetchLikedPlaces = async () => {
         const response = await getLikedPlacesByCity(uid, city); 
-        setPlaceList(response[0].Liked_monuments);
+        setPlaceList(response);
     }
 
     useEffect(()=>{
@@ -69,7 +68,7 @@ const LikedCityScreen = () => {
             <View style={styles.placesContainer}>
                 {placeList?.map((val, key) => (
                     <View key={key} style={styles.cardContainer}>
-                        <CardFeed navigation={navigation} id={val.id}/>
+                        <CardFeed navigation={navigation} id={val}/>
                     </View>
                 ))}
             </View>
