@@ -20,15 +20,21 @@ export const UserProvider: React.FC = ({ children }) => {
 
 		setUser(uid);
 		getUsername(uid).then((response)=>{
-			setUsernameContext(response); 
+			const data = JSON.parse(JSON.stringify(response)); 
+			setUsernameContext(data); 
 		});
 
 		getFollowDetails(uid).then((response)=>{
-			const responseFollowers = JSON.parse(JSON.stringify(response.Followers));
-			const responseFollowings = JSON.parse(JSON.stringify(response.Followings));
-
-			setFollowers(responseFollowers);
-			setFollowings(responseFollowings); 
+			if(response) {
+				const responseFollowers = JSON.parse(JSON.stringify(response.Followers));
+				const responseFollowings = JSON.parse(JSON.stringify(response.Followings));
+		
+				setFollowers(responseFollowers);
+				setFollowings(responseFollowings); 
+			} else {
+				setFollowers([]);
+				setFollowings([]); 
+			}
 		});
     },[uid])
 
