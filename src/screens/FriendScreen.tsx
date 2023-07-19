@@ -33,11 +33,11 @@ const FriendScreen = ({ navigation }) => {
 
 
 	const handleFetchCountries = () => {
-		getVisitedCountries(friendUserId).then((response) => {
-			if(response[0]?.Visited_countries.length === 0){
+        getVisitedCountries(friendUserId).then((response) => {
+			if(response[0]?.length === 0){
 				setCountryList(undefined);
 			} else {
-				setCountryList(response[0].Visited_countries);
+				setCountryList(response);
 			}
 		});
 	};
@@ -59,7 +59,8 @@ const FriendScreen = ({ navigation }) => {
 
 	useEffect(() => {
 		getUsername(friendUserId).then((response)=>{
-			setUsername(response)
+            const data = JSON.parse(JSON.stringify(response));
+			setUsername(data);
 		})
 
         getProfilePicture(friendUserId).then((response)=>{
@@ -78,7 +79,7 @@ const FriendScreen = ({ navigation }) => {
 			return; 
 
 		getVisitedCitiesByCountry(friendUserId, currentCountry.countryName).then((response) =>{
-			setCityList(response[0].Visited_cities); 
+			setCityList(response); 
 		})
 	}, [currentCountry]);
 
@@ -88,7 +89,7 @@ const FriendScreen = ({ navigation }) => {
 		return; 
 
 		getVisitedPlaces(friendUserId, currentCity).then((response)=>{
-			setPlaceList(response[0].Visited_monuments);
+			setPlaceList(response);
 		})
 	}, [currentCity]);
 
