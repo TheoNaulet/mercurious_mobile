@@ -54,8 +54,8 @@ const CardFeed: React.FC<CardFeedProps> = ({ id, navigation }) => {
 					<Text style={styles.CityText}>{place.City}, {place.Country}</Text>
 				</TouchableOpacity>
 				<View style={styles.bottomInfos}>
-					<FriendVisit visitorsId={visitorsFollow}/>
-					<VisitButton isVisited={visited} onclick={setVisited} id={place.id} uid={uid} city={place.City} country={place.Country}/>
+					<FriendVisit navigation={navigation} visitorsId={visitorsFollow}/>
+					<VisitButton isVisited={visited} onclick={setVisited} id={place._id} uid={uid} city={place.City} country={place.Country}/>
 				</View>
 			</View>
 		</View>
