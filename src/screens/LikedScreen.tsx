@@ -15,7 +15,7 @@ const LikedScreen = ({navigation}) => {
 	const handleFetchPlaces = async () => {
     try {
       const response = await getLikedCountries(uid);
-      const result = response?.[0]?.Liked_countries || [];
+      const result = response;
       setCountryList(result);
     } catch (error) {
       console.log(error);
