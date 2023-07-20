@@ -25,14 +25,30 @@ import { UserProvider } from './context/UserContext';
 const HomeStack = createStackNavigator();
 
 const HomeStackNavigator = () => (
-  <HomeStack.Navigator initialRouteName="HomeScreen" screenOptions={{ headerShown: false }}>
+  <HomeStack.Navigator initialRouteName="HomeScreen"  screenOptions={{ headerShown: false}}>
     <HomeStack.Screen name="HomeScreen" component={HomeScreen} />
-    <HomeStack.Screen name="CityScreen" component={CityScreen} options={({ route }) => ({ title: route.params.city })}/>
-    <HomeStack.Screen name="CountryScreen" component={CountryScreen} options={({ route }) => ({ title: route.params.country })} />
-    <HomeStack.Screen name="PlaceScreen" component={PlaceScreen} />
-    <HomeStack.Screen name="FriendScreen" component={FriendScreen} />
     <HomeStack.Screen name="Login" component={Login} options={{ headerShown: false }} />
   </HomeStack.Navigator>
+);
+
+const SearchStack = createStackNavigator();
+
+const SearchStackNavigator = () => (
+  <SearchStack.Navigator initialRouteName="SearchScrren"  screenOptions={{ headerShown: false}}>
+    <SearchStack.Screen name="SearchScreen" component={SearchScreen} />
+  </SearchStack.Navigator>
+);
+
+const ExploreStack = createStackNavigator(); 
+
+const ExploreStackNavigator = () => (
+  <ExploreStack.Navigator initialRouteName="ExploreScreen"  screenOptions={{ headerShown: false}}>
+    <ExploreStack.Screen name="ExploreScreen" component={ExploreScreen} />
+    <ExploreStack.Screen name="CityScreen" component={CityScreen} options={({ route }) => ({ title: route.params.city })}/>
+    <ExploreStack.Screen name="CountryScreen" component={CountryScreen} options={({ route }) => ({ title: route.params.country })} />
+    <ExploreStack.Screen name="PlaceScreen" component={PlaceScreen} />
+    <ExploreStack.Screen name="FriendScreen" component={FriendScreen} />
+  </ExploreStack.Navigator>
 );
 
 const LikedStack = createStackNavigator();
@@ -68,8 +84,8 @@ const BottomTabNavigator = () => {
       >
           <Tab.Screen name="Home" component={HomeStackNavigator} />
           <Tab.Screen name="Liked" component={LikedStackNavigator} />
-          <Tab.Screen name="Search" component={SearchScreen} />
-          <Tab.Screen name="Explore" component={ExploreScreen} />
+          <Tab.Screen name="Search" component={SearchStackNavigator} />
+          <Tab.Screen name="Explore" component={ExploreStackNavigator} />
           <Tab.Screen name="User" component={UserScreen} />
       </Tab.Navigator>
   );
