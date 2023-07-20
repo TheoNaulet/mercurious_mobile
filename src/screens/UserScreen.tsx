@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef, useContext } from 'react';
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import React, { useEffect, useState, useRef, useContext, useLayoutEffect } from 'react';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { getVisitedCountries } from '../api/country';
 import { getVisitedPlaces } from '../api/places';
 import { getVisitedCitiesByCountry } from '../api/city';
@@ -10,6 +10,10 @@ import CardFeed from '../components/cards/CardFeed';
 import UserProfileInfo from '../components/utils/UserProfileInfos';
 import { useIsFocused } from '@react-navigation/native';
 import { UserContext } from '../../context/UserContext';
+// ProfileSection.js
+import { signOutUser } from '../services/authService';
+import { Ionicons } from '@expo/vector-icons';
+
 
 const ProfileSection = ({navigation}) => {
   const auth = FIREBASE_AUTH; 
@@ -28,6 +32,15 @@ const ProfileSection = ({navigation}) => {
 	const [currentCountry, setCurrentCountry] = useState(""); 
 	const [currentCity, setCurrentCity] = useState();
   
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={signOutUser} style={{marginRight: 15}}>
+          <Ionicons name="log-out-outline" size={30} color="black" />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
 
 	const handleFetchCountries = () => {
 		getVisitedCountries(uid).then((response) => {

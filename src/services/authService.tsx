@@ -1,5 +1,5 @@
 import { FIREBASE_AUTH } from '../../FirebaseConfig';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, getAuth, signOut } from 'firebase/auth';
 import { createNewUser } from '../api/user';
 
 /**
@@ -48,5 +48,15 @@ export const signUpUser = async (email: string, password: string): Promise<void>
         }
     } catch (error) {
         throw error;
+    }
+};
+
+export const signOutUser = async () => {
+    const auth = getAuth();
+    try {
+        await signOut(auth);
+        console.log('User signed out!');
+    } catch (error) {
+        console.log(error);
     }
 };
