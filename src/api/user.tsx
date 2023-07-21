@@ -87,7 +87,7 @@ export async function getProfilePicture(userId: string): Promise<string | null> 
 		return null;
 
 	return axiosInstance.post(`${process.env.REACT_APP_API_URL}/api/user/getProfilePicture`, {userId}).then((response) => {
-		return response.data[0].Profile_picture;
+		return response.data;
 	});
 }
 

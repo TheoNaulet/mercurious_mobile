@@ -14,12 +14,11 @@ import { UserContext } from '../../context/UserContext';
 import { signOutUser } from '../services/authService';
 import { Ionicons } from '@expo/vector-icons';
 
-
 const ProfileSection = ({navigation}) => {
   const auth = FIREBASE_AUTH; 
   const uid = auth?.currentUser?.uid; 
   const isFocused = useIsFocused();
-  const { usernameContext } = useContext(UserContext);
+  const { usernameContext, followers, followings, profilePicture} = useContext(UserContext);
 
   const picture = undefined;
 
@@ -98,8 +97,7 @@ const ProfileSection = ({navigation}) => {
 
   return (
     <ScrollView ref={scrollViewRef} contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
-      <Text style={styles.header}>Mon profil</Text>
-      <UserProfileInfo username={username} picture={picture} numberCountries={numberCountries}/>  
+      <UserProfileInfo username={username} picture={profilePicture} numberCountries={numberCountries} followers={followers} followings={followings}/>  
       <FlagList countryList={countryList} onSelectCountry={handleSelectCountry} selectedCountry={currentCountry} />
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.visitedCities}>
         {cityList?.map((city: { id: string; Name: any; Image: any; }) => (
@@ -124,7 +122,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F2F3F6',
   },
   header: {
-    paddingVertical:10,
+    paddingVertical:5,
     fontSize: 24,
     fontWeight: 'bold',
     textAlign:'center',
