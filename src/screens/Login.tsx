@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput, ActivityIndicator, KeyboardAvoidingView, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, StyleSheet, TextInput, ActivityIndicator, KeyboardAvoidingView, TouchableOpacity, Platform, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import React, { useState } from 'react';
 import { Button, Icon, Image } from 'react-native-elements';
 import { signInUser, signUpUser } from '../services/authService';
@@ -56,6 +56,7 @@ const Login = () => {
     
     return (
         <View style={styles.container}>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
             <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
                 <View style={styles.logoContainer}>
                     <Image style={styles.logo} source={require('../../assets/logo_mercurious.png')} />
@@ -80,6 +81,7 @@ const Login = () => {
                 </>
                 )}
             </KeyboardAvoidingView>
+            </TouchableWithoutFeedback>
         </View>
     );
 };
