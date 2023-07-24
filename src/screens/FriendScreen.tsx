@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, Image, ScrollView, StyleSheet } from 'react-native';
 import { getVisitedCountries } from '../api/country';
 import { getVisitedPlaces } from '../api/places';
-import { getProfilePicture, getUsername } from '../api/user';
+import { getFollowDetails, getProfilePicture, getUsername } from '../api/user';
 import { getVisitedCitiesByCountry } from '../api/city';
 import FlagList from '../components/utils/FlagList';
 import CitySelectionCard from '../components/cards/SelectCard';
@@ -13,8 +13,8 @@ import { FIREBASE_AUTH } from '../../FirebaseConfig';
 import FollowButton from '../components/utils/FollowButton';
 
 const FriendScreen = ({ navigation }) => {
-    const route = useRoute(); // Pour récupérer les paramètres de la route
-    const friendUserId = route.params?.User; // Récupération de l'ID de l'utilisateur envoyé par UserScreen
+    const route = useRoute();
+    const friendUserId = route.params?.User;
     
     const isFocused = useIsFocused();
     const scrollViewRef = useRef();
@@ -27,10 +27,11 @@ const FriendScreen = ({ navigation }) => {
     const [currentCountry, setCurrentCountry] = useState("");
     const [currentCity, setCurrentCity] = useState();
     const [picture, setPicture] = useState(); 
+    const [followers, setFollowers] = useState(); 
+    const [followings, setFollowings] = useState(); 
 
     const auth = FIREBASE_AUTH; 
     const uid = auth?.currentUser?.uid; 
-
 
 	const handleFetchCountries = () => {
         getVisitedCountries(friendUserId).then((response) => {
@@ -58,13 +59,20 @@ const FriendScreen = ({ navigation }) => {
     }, [isFocused]); 
 
 	useEffect(() => {
+        if(!friendUserId) return; 
+
+        getFollowDetails(friendUserId).then((response)=>{
+            setFollowers(response.Followers); 
+            setFollowings(response.Followings);
+        })
+
 		getUsername(friendUserId).then((response)=>{
             const data = JSON.parse(JSON.stringify(response));
 			setUsername(data);
 		})
 
         getProfilePicture(friendUserId).then((response)=>{
-			setPicture(response);
+			setPicture(response.url);
         })
 	}, [friendUserId]);
 
@@ -96,22 +104,24 @@ const FriendScreen = ({ navigation }) => {
     return (
     <ScrollView ref={scrollViewRef} contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
         <FollowButton followerId={uid} followedId={friendUserId}/>
-        <UserProfileInfo username={username} picture={picture} numberCountries={numberCountries}/>  
-        {countryList && countryList.length > 0 ? (
+        <UserProfileInfo id={friendUserId} username={username} picture={picture} numberCountries={numberCountries} followers={followers} followings={followings}/>  
+        {countryList && countryList?.length > 0 ? (
             <>
-        <FlagList countryList={countryList} onSelectCountry={handleSelectCountry} selectedCountry={currentCountry} />
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.visitedCities}>
-            {cityList && cityList?.map((city: { _id: React.Key | null | undefined; Name: any; Image: any; }) => (
-                <CitySelectionCard key={city._id} Name={city.Name} CardImage={city.Image} onSelectCity={() => handleSelectCity(city.Name)}/>
-            ))}
-        </ScrollView>
-        { currentCity && <Text style={styles.visitedCitiesTitle}>Lieux visités à {currentCity}</Text>}  
-        <View style={styles.visitedPlaces}>
-            {placeList && placeList?.map((place: { id: string; name: string; picture: string; city: string; country: string; note: number; extraImage: string; }, index: React.Key | null | undefined) => (
-                <CardFeed key={index} id={place.id} navigation={navigation}/>
-            ))}
-        </View>
-        </>
+                <FlagList countryList={countryList} onSelectCountry={handleSelectCountry} selectedCountry={currentCountry} />
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.visitedCities}>
+                    {cityList && cityList?.map((city: { _id: React.Key | null | undefined; Name: any; Image: any; }, index: number) => (
+                        <CitySelectionCard key={index} Name={city.Name} CardImage={city.Image} onSelectCity={() => handleSelectCity(city.Name)}/>
+                    ))}
+                </ScrollView>
+                { currentCity && <Text style={styles.visitedCitiesTitle}>Lieux visités à {currentCity}</Text>}  
+                <View style={styles.visitedPlaces}>
+                    {
+                        placeList?.map((place: { id: string }, index: number) => (
+                            <CardFeed key={index} id={place} navigation={navigation}/>
+                        ))
+                    }
+                </View>
+            </>
         ) : (<Text style={styles.emptyMessage}>{username} n'a pas encore renseigné</Text>)}
     </ScrollView>
     );
