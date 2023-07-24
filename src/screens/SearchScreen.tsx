@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, ScrollView, Keyboard } from 'react-native';
-import { searchCity } from '../api/city';
-import { searchCountry } from '../api/country';
-import { searchPlace } from '../api/places';
 import { Icon } from 'react-native-elements';
-import { searchAll, searchUser } from '../api/user';
+import { searchAll } from '../api/user';
 
 const SearchScreen = ({navigation}) => {
   const [query, setQuery] = useState('');
@@ -29,18 +26,6 @@ const SearchScreen = ({navigation}) => {
           setCountryList(response.countries);
           setCityList(response.cities);
         });
-				// await searchCity(query).then((response)=>{
-				// 	setCityList(response);
-				// })
-				// await searchCountry(query).then((response)=>{
-				// 	setCountryList(response);
-				// })
-				// await searchPlace(query).then((response)=>{
-				// 	setPlaceList(response);
-				// })
-        // await searchUser(query).then((response)=>{
-				// 	setUserList(response);
-				// })
 			}
 				} catch (error) {
 			console.log(error); 
@@ -50,15 +35,17 @@ const SearchScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
       <View style={styles.searchBar}>
-        <TouchableOpacity style={styles.dismissButton} onPress={() => Keyboard.dismiss()}>
-          <Icon name="arrow-left" color={'#000000'} type="font-awesome" />
-        </TouchableOpacity>
         <TextInput
             style={styles.input}
             placeholder="Recherchez un lieu..."
             value={query}
             onChangeText={(text) => setQuery(text)}
           />
+          {query.length > 0 && (
+        <TouchableOpacity style={styles.clearButton} onPress={() => setQuery('')}>
+            <Icon type='font-awesome' name="times" size={20} color="#444" />
+        </TouchableOpacity>
+      )}
       </View>
       <ScrollView scrollEventThrottle={16} onScroll={Keyboard.dismiss}>
       {cityList && cityList.map((val, key) => (
@@ -160,6 +147,11 @@ const styles = StyleSheet.create({
     height:50,
     width:50,
     borderRadius:100,
+  }, 
+  clearButton:{
+    alignItems:'center',
+    justifyContent:'center',
+    margin:10,
   }
 });
 
