@@ -37,7 +37,7 @@ const LikedScreen = ({navigation}) => {
     <View style={styles.container}>
       {countryList ? <Text style={styles.text}>Pays que vous avez aimés</Text> : <Text style={styles.text}>Aucun lieu liké</Text>}
       <ScrollView contentContainerStyle={styles.buttonContainer}>
-        {countryList?.map((val: { countryName: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactFragment | React.ReactPortal | null | undefined; image: any; }, index: React.Key | null | undefined) => (
+        {countryList?.map((val, index) => (
           <TouchableOpacity onPress={() => handleButtonPress(val.countryName)} key={index} style={styles.button}>
             <Image source={{ uri: val.image }} style={styles.buttonBackground} />
             <Text style={styles.buttonText}>{val.countryName}</Text>
@@ -52,19 +52,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'flex-start',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     backgroundColor: '#F5FCFF',
   },
   text: {
+    alignSelf:'center',
     fontSize: 20,
     textAlign: 'center',
     margin: 10,
     fontWeight:"bold",
   },
   buttonContainer: {
+    width:"100%",
+    alignSelf:"flex-start",
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     paddingHorizontal: 10,
   },
   button: {
@@ -73,7 +76,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     overflow: 'hidden',
     margin:3,
-  },
+  },  
   buttonBackground: {
     width: '100%',
     height: '100%',
