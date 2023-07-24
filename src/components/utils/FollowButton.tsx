@@ -27,23 +27,6 @@ const FollowButton: React.FC<FollowButtonProps> = ({ followerId, followedId }) =
         }
     }, [followerId, followedId, followings])
 
-    // const handleFetchFollowers = async () => {
-    //     const response = await getFollowDetails(followedId);
-    //     console.log(response)
-
-    //     if (response && response[0] && response[0].Followers) {
-    //         setIsFollowing(response[0].Followers.includes(followerId));
-    //     } else {
-    //         setIsFollowing(false);
-    //     }
-    // };
-
-    // useEffect(()=>{
-    //     if(!followerId || !followedId) return;
-
-    //     handleFetchFollowers(); 
-    // },[followerId, followedId])
-
     const handleFollow = async () => {
         await follow(followerId, followedId);
         setIsFollowing(true);
