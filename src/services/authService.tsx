@@ -35,8 +35,9 @@ export const signUpUser = async (email: string, password: string): Promise<void>
         const uid = result.user.uid;
         const userEmail = result.user.email;
         const username = result.user.displayName;
+        const picture = "folderName/e7a685bd6e032e057226bf0e0d2a30e4"
 
-        const creation = await createNewUser(uid, userEmail, username, null);
+        const creation = await createNewUser(uid, userEmail, username, picture);
 
         if (creation) {
             const user = auth.currentUser;
