@@ -24,38 +24,37 @@ const CardFeed: React.FC<CardFeedProps> = ({ id, navigation }) => {
 	useEffect(()=>{
 		if(!id || !uid ) return;
 		getPlaceByIdAndUserInteractions(id, uid).then((data) => {
-			setVisitorsFollow(data.visitedByFollowing)
-			setVisited(data.isVisited);
-			setLiked(data.isLiked);
-			setPlace(data.place)
+			setVisitorsFollow(data?.visitedByFollowing)
+			setVisited(data?.isVisited);
+			setLiked(data?.isLiked);
+			setPlace(data?.place)
 		});
 	},[id, uid])
-
 
 	return (
 		<View style={styles.card}>
 			<View style={styles.imageContainer}>
-				<Image style={styles.image} source={{ uri: place.Image }} />
+				<Image style={styles.image} source={{ uri: place?.Image }} />
 				<View style={styles.likeButtonContainer}>
-					<LikeButton isLiked={liked} onclick={setLiked} uid={uid} id={id} city={place.City} country={place.Country}/>
+					<LikeButton isLiked={liked} onclick={setLiked} uid={uid} id={id} city={place?.City} country={place?.Country}/>
 				</View>
 			</View>
 			<View style={styles.cardInfos}>
 				<View style={styles.nameContainer}>
-					<Text style={styles.name}>{place.Name}</Text>
-					{place.Rate && (
+					<Text style={styles.name}>{place?.Name}</Text>
+					{place?.Rate && (
 						<View style={styles.noteContainer}>
 							<Icon name="star" color="#FFD700" type="font-awesome" size={20} />
-							<Text style={styles.noteText}>{place.Rate}</Text>
+							<Text style={styles.noteText}>{place?.Rate}</Text>
 						</View>
 					)}
 				</View>
-				<TouchableOpacity style={styles.cityCountry} onPress={() => navigation.navigate('CityScreen', {city: place.City})}>
-					<Text style={styles.CityText}>{place.City}, {place.Country}</Text>
+				<TouchableOpacity style={styles.cityCountry} onPress={() => navigation.navigate('CityScreen', {city: place?.City})}>
+					<Text style={styles.CityText}>{place?.City}, {place?.Country}</Text>
 				</TouchableOpacity>
 				<View style={styles.bottomInfos}>
 					<FriendVisit navigation={navigation} visitorsId={visitorsFollow}/>
-					<VisitButton isVisited={visited} onclick={setVisited} id={place._id} uid={uid} city={place.City} country={place.Country}/>
+					<VisitButton isVisited={visited} onclick={setVisited} id={place?._id} uid={uid} city={place?.City} country={place?.Country}/>
 				</View>
 			</View>
 		</View>
