@@ -43,8 +43,6 @@ const LikedCityScreen = () => {
         fetchLikedPlaces();
     },[city]);
 
-    
-
     useEffect(() => {
         navigation.setOptions({
             headerShown: true,
