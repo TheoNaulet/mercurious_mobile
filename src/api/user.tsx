@@ -158,3 +158,63 @@ export async function getUsersById(ids: string[]): Promise<any> {
 		console.log(error);
 	}
 }
+
+/**
+ * Updates the username of a specific user.
+ *
+ * @async
+ * @param {string} userId - The ID of the user.
+ * @param {string} newUsername - The new username to set.
+ * @returns {Promise<any>} Returns the data of the response if the request is successful.
+ * @throws {Error} If the request fails, or the userId or newUsername are not provided, it throws an error or logs it.
+ */
+export async function updateUsername(userId: string, newUsername: string): Promise<any> {
+    if (!userId || !newUsername) {
+        return;
+    }
+
+    try {
+        const response = await axiosInstance.put(`${process.env.REACT_APP_API_URL}/api/user/updateUsername`, {
+            userId: userId,
+            Username: newUsername,
+        });
+
+        if (response.data.message) {
+            console.log(response.data.message);
+        }
+
+        return response.data;
+    } catch (error) {
+        console.error('Erreur lors de la mise à jour du nom d\'utilisateur', error);
+    }
+}
+
+/**
+ * Fetches profile information of a list of followers and followings.
+ *
+ * @async
+ * @param {Array} followers - The IDs of the followers.
+ * @param {Array} followings - The IDs of the followings.
+ * @returns {Promise<any>} Returns the data of the response if the request is successful.
+ * @throws {Error} If the request fails, it throws an error or logs it.
+ */
+export async function fetchUserProfiles(followers: Array<string>, followings: Array<string>): Promise<any> {
+    if (!followers || !followings) {
+        return;
+    }
+
+    try {
+        const response = await axiosInstance.post(`${process.env.REACT_APP_API_URL}/api/user/getFollowInfos`, {
+            followers,
+            followings,
+        });
+
+        if (response.data.message) {
+            console.log(response.data.message);
+        }
+
+        return response.data;
+    } catch (error) {
+        console.error('Erreur lors de la récupération des informations de profil des utilisateurs', error);
+    }
+}
