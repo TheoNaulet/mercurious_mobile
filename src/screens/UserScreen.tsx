@@ -11,16 +11,15 @@ import UserProfileInfo from '../components/utils/UserProfileInfos';
 import { useIsFocused } from '@react-navigation/native';
 import { UserContext } from '../../context/UserContext';
 // ProfileSection.js
-import { signOutUser } from '../services/authService';
 import { Ionicons } from '@expo/vector-icons';
+import { Icon } from 'react-native-elements';
+import SettingsModal from '../components/modals/SettingsModal';
 
 const ProfileSection = ({navigation}) => {
   const auth = FIREBASE_AUTH; 
   const uid = auth?.currentUser?.uid; 
   const isFocused = useIsFocused();
-  const { usernameContext, followers, followings, profilePicture} = useContext(UserContext);
-
-  const picture = undefined;
+  const { usernameContext, followers, followings, profilePicture, signout} = useContext(UserContext);
 
   const scrollViewRef = useRef(); 
 	const [username, setUsername] = useState();
@@ -34,7 +33,7 @@ const ProfileSection = ({navigation}) => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <TouchableOpacity onPress={signOutUser} style={{marginRight: 15}}>
+        <TouchableOpacity onPress={signout} style={{marginRight: 15}}>
           <Ionicons name="log-out-outline" size={30} color="black" />
         </TouchableOpacity>
       ),
@@ -97,7 +96,8 @@ const ProfileSection = ({navigation}) => {
 
   return (
     <ScrollView ref={scrollViewRef} contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
-      <UserProfileInfo username={username} picture={profilePicture} numberCountries={numberCountries} followers={followers} followings={followings}/>  
+      <SettingsModal/>
+      <UserProfileInfo id={uid} username={username} picture={profilePicture} numberCountries={numberCountries} followers={followers} followings={followings} navigation={navigation}/>  
       <FlagList countryList={countryList} onSelectCountry={handleSelectCountry} selectedCountry={currentCountry} />
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.visitedCities}>
         {cityList?.map((city: { id: string; Name: any; Image: any; }) => (
@@ -109,7 +109,6 @@ const ProfileSection = ({navigation}) => {
       }  
       <View style={styles.visitedPlaces}>
         {placeList?.map((place: { id: string; }) => (
-
           <CardFeed key={place} id={place} navigation={navigation}/>
         ))}
       </View>
