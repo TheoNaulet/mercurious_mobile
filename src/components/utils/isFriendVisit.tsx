@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, Modal, Button, FlatList } from 'react-nat
 import { getUsersById } from '../../api/user';
 import { Image } from 'react-native';
 import { StyleSheet } from 'react-native';
+import { Icon } from 'react-native-elements';
 
 /**
  * Component to check if friends have visited a specific place.
@@ -13,7 +14,6 @@ import { StyleSheet } from 'react-native';
 const FriendVisit = ({ visitorsId, navigation }: { visitorsId: array, navigation: Object }): JSX.Element => {
     const [visitors, setVisitors] = useState([]); 
     const [modalVisible, setModalVisible] = useState(false);
-    const defaultPicture = 'https://cdn-icons-png.flaticon.com/512/847/847969.png';
 
     const fetchVisitors = async () => {
         if(visitorsId?.length > 0) {
@@ -79,8 +79,14 @@ const FriendVisit = ({ visitorsId, navigation }: { visitorsId: array, navigation
                 visible={modalVisible}
                 onRequestClose={closeModal}
             >
-                <TouchableOpacity style={styles.centeredView} activeOpacity={1} onPress={closeModal}>
+                <TouchableOpacity style={styles.centeredView} activeOpacity={1}>
                     <View style={styles.modalView}>
+                        <View style={styles.modalTitle}>
+                            <TouchableOpacity onPress={closeModal} style={styles.iconContainer}>
+                                <Icon type='font-awesome' name="arrow-left" />
+                            </TouchableOpacity>
+                            <Text style={styles.titleText}>Amis ayant visité ce lieu</Text>
+                        </View>
                         <FlatList
                             data={visitors}
                             keyExtractor={item => item.userId}
@@ -134,26 +140,39 @@ const styles = StyleSheet.create({
     },
     centeredView: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'flex-end',
         alignItems: 'center',
-        marginTop: 22,
+    },
+    modalTitle: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 10,
+    },
+    iconContainer: {
+        marginRight: 10,
+    },
+    titleText: {
+        fontSize: 18,
+        fontWeight: 'bold',
     },
     modalView: {
-        margin: 20,
+        height:'100%',
+        width: '100%',
         backgroundColor: 'white',
         borderRadius: 20,
-        padding: 35,
-        alignItems: 'center',
+        padding: 50,
+        alignItems: 'flex-start',
         shadowColor: '#000',
         shadowOffset: {
             width: 0,
             height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
     },
     userRow: {
+        paddingTop:20,
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 10
