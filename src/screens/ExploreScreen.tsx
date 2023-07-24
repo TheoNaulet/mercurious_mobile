@@ -1,14 +1,17 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useContext} from 'react';
 import { StyleSheet, ScrollView } from 'react-native';
 
-import { getCountries, getCountriesByContinent } from "../api/country";
-import { getAllCities, getCitiesByCountry } from "../api/city";
+import { fetchCountriesWithVisitors, getCountries, getCountriesByContinent } from "../api/country";
+import { getAllCities, getAllCitiesTest, getCitiesByCountry } from "../api/city";
 import ExploreCard from '../components/cards/ExploreCard';
 import ButtonList from '../components/utils/ButtonList';
+import { UserContext } from '../../context/UserContext';
 
 const ExploreScreen = () => {
   const scrollRef = useRef();
   const continents = ['Afrique', 'Amérique', 'Asie', 'Europe', 'Océanie'];
+
+  const { followings } = useContext(UserContext); 
   
 	const [continent, setContinent] = useState("");
   const [country, setCountry] = useState("");
@@ -28,7 +31,7 @@ const ExploreScreen = () => {
     if (!continent) {
       const newPage = page + 1;
       setPage(newPage);
-      const moreCountries = await getCountries(newPage);
+      const moreCountries = await fetchCountriesWithVisitors(followings, newPage);
       setCountryList(oldCountries => [...oldCountries, ...moreCountries]);
     }
   };
@@ -37,15 +40,15 @@ const ExploreScreen = () => {
     if(!country){
       const newPage = cityPage + 1;
       setCityPage(newPage);
-      const moreCities = await getAllCities(newPage);
+      const moreCities = await getAllCitiesTest(followings, newPage);
       setCityList(oldCities => [...oldCities, ...moreCities]);
     }
   };
 
 
 	const handleFetchPlaces = async () => {
-    const responseCountries = await getCountries(1); 
-    const responseCities = await getAllCities(1);
+    const responseCountries = await fetchCountriesWithVisitors(followings, 1); 
+    const responseCities = await getAllCitiesTest(followings, 1);
 
     setCityList(responseCities); 
 		setCountryList(responseCountries);
@@ -53,14 +56,14 @@ const ExploreScreen = () => {
 
   const handleFetchCountriesByContinent = async () => {
 		if (continent) {
-			const response = await getCountriesByContinent(continent);
+			const response = await getCountriesByContinent(continent, followings);
 			setCountryList(response);
 		}
 	};
 
   const handleFetchCitiesByCountry = async () => {
 		if (country) {
-			const response = await getCitiesByCountry(country);
+			const response = await getCitiesByCountry(country, followings);
 			setCityList(response);
 		}
 	};
@@ -92,7 +95,7 @@ const ExploreScreen = () => {
         scrollEventThrottle={400}
         showsHorizontalScrollIndicator={false} alwaysBounceVertical={false} contentContainerStyle={styles.countriesContainer}>
         {countryList.map((val, index) => (
-            <ExploreCard Name={val.countryName} CardImage={val.image} key={index} type="country"/>
+            <ExploreCard visitors={val?.visitorUserIds} Name={val.countryName} CardImage={val.image} key={index} type="country"/>
           ))}
       </ScrollView>
       <ButtonList item={country} setItem={setCountry} list={countryList.map(country => country.countryName)}/>
@@ -107,7 +110,7 @@ const ExploreScreen = () => {
         }}
         scrollEventThrottle={400}>
         {cityList.map((val, index) => (
-            <ExploreCard Name={val?.Name} CardImage={val?.Image} key={index} type="city"/>
+            <ExploreCard visitors={val?.visitorUserIds} Name={val?.Name} CardImage={val?.Image} key={index} type="city"/>
         ))}
       </ScrollView>
     </ScrollView>
