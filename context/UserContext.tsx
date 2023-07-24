@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { User } from 'firebase/auth';
+import { User, getAuth, signOut } from 'firebase/auth';
 import { FIREBASE_AUTH } from '../FirebaseConfig';
 import { getFollowDetails, getProfilePicture, getUsername } from '../src/api/user';
 
@@ -10,21 +10,34 @@ export const UserProvider: React.FC = ({ children }) => {
 	const [followings, setFollowings] = useState([]); 
 	const [followers, setFollowers] = useState([]); 
 	const [usernameContext, setUsernameContext] = useState('');
-	const [profilePicture, setProfilePicture] = useState(); 
+	const [profilePicture, setProfilePicture] = useState();
+	const [update, setUpdate] = useState(0); 
 
 	const auth = FIREBASE_AUTH; 
 	const uid = auth?.currentUser?.uid; 
+
+	const signout = async () => {
+		try {
+			const auth = getAuth();
+			await signOut(auth);
+			console.log('User signed out!');
+			setUser(null);
+			setFollowings(null)
+			setFollowers(null)
+			setUsernameContext(null)
+			setProfilePicture(null)
+		} catch (error) {
+			console.log(error);
+		}
+	};
+	
 
     useEffect(()=>{
         if (!uid)
             return
 
 		getProfilePicture(uid).then((response) =>{
-			if(!response){
-				setProfilePicture("https://cdn-icons-png.flaticon.com/512/847/847969.png");
-			} else {
-				setProfilePicture(response?.url);
-			}
+			setProfilePicture(response?.url);
 		})
 
 		setUser(uid);
@@ -45,10 +58,10 @@ export const UserProvider: React.FC = ({ children }) => {
 				setFollowings([]); 
 			}
 		});
-    },[uid])
+    },[uid, update])
 
 	return (
-	<UserContext.Provider value={{user, followers,  followings, usernameContext, profilePicture }}> 
+	<UserContext.Provider value={{user, followers,  followings, usernameContext, profilePicture, setUpdate, signout }}> 
 		{children}
 	</UserContext.Provider>
 	);
