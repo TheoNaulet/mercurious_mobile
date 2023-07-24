@@ -25,8 +25,8 @@ export async function getAllCities(page: number = 1): Promise<any> {
  * @param {string} country - The country to filter cities by.
  * @returns {Promise<any>} Returns the data of the response with cities from the specified country.
  */
-export async function getCitiesByCountry(country: string): Promise<any> {
-	return axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/city/getCitiesByCountry/${country}`)
+export async function getCitiesByCountry(country: string, followings: Array<string>): Promise<any> {
+	return axiosInstance.post(`${process.env.REACT_APP_API_URL}/api/city/getCitiesByCountry/${country}`, { followings: followings })
 		.then((response) => {
 			return response.data;
 		});
@@ -126,4 +126,19 @@ export async function getVisitedCitiesByCountry(id: string, countryName: string)
 		.then((response) => {
 			return response.data;
 		});
+}
+
+/**
+ * Fetch all cities visited by certain users with pagination.
+ *
+ * @async
+ * @param {Array<string>} followings - The array of user IDs.
+ * @param {number} page - The page number to return.
+ * @returns {Promise<any>} Returns the data of the response with all visited cities and their visitor user IDs.
+ */
+export async function getAllCitiesTest(followings: Array<string>, page: number = 1): Promise<any> {
+	return axiosInstance.post(`${process.env.REACT_APP_API_URL}/api/city/getAllCitiesTest?page=${page}`, { followings })
+    .then((response) => {
+		return response.data;
+	});
 }

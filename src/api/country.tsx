@@ -25,8 +25,8 @@ export async function getCountries(page: number = 1): Promise<any> {
  * @param {string} continent - The continent to filter countries by.
  * @returns {Promise<any>} Returns the data of the response with countries from the specified continent.
  */
-export async function getCountriesByContinent(continent: string): Promise<any> {
-    return axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/country/getCountriesByContinent/${continent}`).then((response) => {
+export async function getCountriesByContinent(continent: string, followings: Array<string>): Promise<any> {
+    return axiosInstance.post(`${process.env.REACT_APP_API_URL}/api/country/getCountriesByContinent/${continent}`, { followings:followings }).then((response) => {
         return(response.data);
     });
 }
@@ -126,4 +126,22 @@ export async function getVisitedCountries(id: string): Promise<any> {
 	return axiosInstance.post(`${process.env.REACT_APP_API_URL}/api/user/getVisitedCountries`, { userId: id }).then((response) => {
 		return response.data;
 	});
+}
+
+/**
+ * Fetch countries with their visitor user IDs.
+ *
+ * @async
+ * @param {Array<string>} followings - The list of following user IDs.
+ * @param {number} page - The page number.
+ * @returns {Promise<any>} Returns the data of the response with the countries and their visitor user IDs.
+ */
+export async function fetchCountriesWithVisitors(followings: Array<string>, page: number): Promise<any> {
+    return axiosInstance.post(`${process.env.REACT_APP_API_URL}/api/country/getAllCountriesTest?page=${page}`, 
+    { 
+        followings: followings
+    })
+    .then((response) => {
+        return response.data;
+    });
 }
