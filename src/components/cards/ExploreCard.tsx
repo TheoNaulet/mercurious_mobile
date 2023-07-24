@@ -14,7 +14,7 @@ interface ExploreCardProps {
  * @param {ExploreCardProps} props - The properties passed to this component.
  * @returns {JSX.Element} A JSX element that displays a card with image and text.
  */
-const ExploreCard: React.FC<ExploreCardProps> = ({ Name, CardImage, type }: ExploreCardProps): JSX.Element => {
+const ExploreCard: React.FC<ExploreCardProps> = ({ Name, CardImage, visitors, type }: ExploreCardProps): JSX.Element => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
   const navigation = useNavigation();
@@ -42,6 +42,7 @@ const ExploreCard: React.FC<ExploreCardProps> = ({ Name, CardImage, type }: Expl
       <Image style={styles.cardImage} source={{ uri: CardImage }} onLoadStart={() => setImageLoaded(false)} onLoadEnd={() => setImageLoaded(true)}/>
       <View style={styles.textContainer}>
         <Text style={styles.text}>{Name}</Text>
+        {visitors && <Text style={styles.text}>{visitors?.length} amis ont visité</Text>}
       </View>
     </TouchableOpacity>
   );
