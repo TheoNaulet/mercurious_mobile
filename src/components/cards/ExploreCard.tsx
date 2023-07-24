@@ -6,6 +6,7 @@ interface ExploreCardProps {
   Name: string;
   CardImage: string;
   type: string;
+  visitors:Array<string>
 }
 
 /**
