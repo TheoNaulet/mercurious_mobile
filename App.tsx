@@ -20,12 +20,10 @@ import { FIREBASE_AUTH } from './FirebaseConfig';
 
 import { UserProvider } from './context/UserContext';
 
-
-
 const HomeStack = createStackNavigator();
 
 const HomeStackNavigator = () => (
-  <HomeStack.Navigator initialRouteName="HomeScreen"  screenOptions={{ headerShown: false}}>
+  <HomeStack.Navigator initialRouteName="HomeScreen"  screenOptions={{ headerShown: true, headerStyle:{backgroundColor:"#BB2649", height:50}, headerTitle:''}}>
     <HomeStack.Screen name="HomeScreen" component={HomeScreen} />
     <HomeStack.Screen name="Login" component={Login} options={{ headerShown: false }} />
   </HomeStack.Navigator>
@@ -34,33 +32,42 @@ const HomeStackNavigator = () => (
 const SearchStack = createStackNavigator();
 
 const SearchStackNavigator = () => (
-  <SearchStack.Navigator initialRouteName="SearchScrren"  screenOptions={{ headerShown: false}}>
+  <SearchStack.Navigator initialRouteName="SearchScreen"  screenOptions={{ headerShown: true, headerStyle:{backgroundColor:"#BB2649", height:50}, headerTitle:''}}>
     <SearchStack.Screen name="SearchScreen" component={SearchScreen} />
+    <SearchStack.Screen name="CityScreen" component={CityScreen} options={({ route }) => ({ title: route?.params?.city })}/>
+    <SearchStack.Screen name="CountryScreen" component={CountryScreen} options={({ route }) => ({ title: route?.params?.country })} />
+    <SearchStack.Screen name="PlaceScreen" component={PlaceScreen} />
   </SearchStack.Navigator>
 );
 
 const ExploreStack = createStackNavigator(); 
 
 const ExploreStackNavigator = () => (
-  <ExploreStack.Navigator initialRouteName="ExploreScreen"  screenOptions={{ headerShown: false}}>
+  <ExploreStack.Navigator initialRouteName="ExploreScreen"  screenOptions={{ headerShown: true, headerStyle:{backgroundColor:"#BB2649", height:50}, headerTitle:''}}>
     <ExploreStack.Screen name="ExploreScreen" component={ExploreScreen} />
-    <ExploreStack.Screen name="CityScreen" component={CityScreen} options={({ route }) => ({ title: route.params.city })}/>
-    <ExploreStack.Screen name="CountryScreen" component={CountryScreen} options={({ route }) => ({ title: route.params.country })} />
-    <ExploreStack.Screen name="PlaceScreen" component={PlaceScreen} />
-    <ExploreStack.Screen name="FriendScreen" component={FriendScreen} />
   </ExploreStack.Navigator>
 );
 
 const LikedStack = createStackNavigator();
 
 const LikedStackNavigator = () => (
-  <LikedStack.Navigator initialRouteName="LikedScreen" screenOptions={{ headerShown: false }}>
+  <LikedStack.Navigator initialRouteName="LikedScreen" screenOptions={{ headerShown: true, headerStyle:{backgroundColor:"#BB2649", height:50}, headerTitle:''}}>
     <LikedStack.Screen name="LikedScreen" component={LikedScreen} />
     <LikedStack.Screen name="LikedCity" component={LikedCityScreen} options={{headerShown: false, animationTypeForReplace: 'push'}}/>
   </LikedStack.Navigator>
 );
 
+const UserStack = createStackNavigator();
+
+const UserStackNavigator = () => (
+  <UserStack.Navigator initialRouteName="UserScreen" screenOptions={{ headerShown: true, headerStyle:{backgroundColor:"#BB2649", height:50}, headerTitle:''}}>
+    <UserStack.Screen name="UserScreen" component={UserScreen} />
+    <UserStack.Screen name="FriendScreen" component={FriendScreen} />
+  </UserStack.Navigator>
+);
+
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
 const BottomTabNavigator = () => {
   return (
@@ -82,15 +89,14 @@ const BottomTabNavigator = () => {
               },
           })}
       >
-          <Tab.Screen name="Home" component={HomeStackNavigator} />
-          <Tab.Screen name="Liked" component={LikedStackNavigator} />
-          <Tab.Screen name="Search" component={SearchStackNavigator} />
-          <Tab.Screen name="Explore" component={ExploreStackNavigator} />
-          <Tab.Screen name="User" component={UserScreen} />
+          <Tab.Screen name="Home" component={HomeStackNavigator} options={{  headerShown:false,  headerStyle: { height: 50 }, }} />
+          <Tab.Screen name="Liked" component={LikedStackNavigator} options={{  headerShown:false,  headerStyle: { height: 50 }, }}/>
+          <Tab.Screen name="Search" component={SearchStackNavigator} options={{  headerShown:false,  headerStyle: { height: 50 }, }}/>
+          <Tab.Screen name="Explore" component={ExploreStackNavigator} options={{  headerShown:false,  headerStyle: { height: 50 }, }}/>
+          <Tab.Screen name="User" component={UserStackNavigator} options={{  headerShown:false,  headerStyle: { height: 50 }, }}/>
       </Tab.Navigator>
   );
 };
-
 const App = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -111,7 +117,15 @@ const App = () => {
   return (
     <UserProvider>
       <NavigationContainer>
-        {user ? <BottomTabNavigator /> : <Login />}
+        <Stack.Navigator >
+            {user ? (
+              <>
+                <Stack.Screen name="Tabs" component={BottomTabNavigator} options={{ headerShown: false }} />
+              </>
+          ) : (
+            <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+          )}
+        </Stack.Navigator>
       </NavigationContainer>
     </UserProvider>
   );
