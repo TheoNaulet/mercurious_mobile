@@ -2,16 +2,19 @@ import { View, Text, TouchableOpacity, StyleSheet, Dimensions, ScrollView, Image
 import { Icon } from 'react-native-elements';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { FIREBASE_AUTH } from '../../FirebaseConfig';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { getLikedCitiesByCountry } from '../api/city';
 import CitySelectionCard from '../components/cards/SelectCard';
-import { getLikedPlacesByCity } from '../api/places';
-import CardFeed from '../components/cards/CardFeed';
+import { getAllPlaceByIdAndUserInteractions, getLikedPlacesByCity } from '../api/places';
+import NewCardFeed from '../components/cards/NewCardFeed';
+import { UserContext } from '../../context/UserContext';
 
 const LikedCityScreen = () => {
     const [cityList, setCityList] = useState();
     const [city, setCity] = useState('');
     const [placeList, setPlaceList] = useState(); 
+
+    const { followings } = useContext(UserContext)
 
     const auth = FIREBASE_AUTH; 
     const uid = auth?.currentUser?.uid; 
@@ -25,14 +28,15 @@ const LikedCityScreen = () => {
     }
 
     const fetchLikedPlaces = async () => {
-        const response = await getLikedPlacesByCity(uid, city); 
+        const data = await getLikedPlacesByCity(uid, city); 
+        const response = await getAllPlaceByIdAndUserInteractions(data, uid, followings)
+
         setPlaceList(response);
     }
 
     useEffect(()=>{
         if(!uid || !countryName)
-            return;
-
+            return; 
         fetchLikedCities();
     },[uid, countryName]);
 
@@ -66,7 +70,7 @@ const LikedCityScreen = () => {
             <View style={styles.placesContainer}>
                 {placeList?.map((val, key) => (
                     <View key={key} style={styles.cardContainer}>
-                        <CardFeed navigation={navigation} id={val}/>
+                            <NewCardFeed key={key} navigation={navigation} place={val}/>
                     </View>
                 ))}
             </View>
