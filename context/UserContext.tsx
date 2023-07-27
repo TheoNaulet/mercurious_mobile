@@ -1,16 +1,30 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { User, getAuth, signOut } from 'firebase/auth';
 import { FIREBASE_AUTH } from '../FirebaseConfig';
-import { getFollowDetails, getProfilePicture, getUsername } from '../src/api/user';
+import { getUserContext } from '../src/api/user';
 
-export const UserContext = createContext<User | null>(null);
+interface UserContextType {
+	user: string;
+	followers: any[]; 
+	followings: any[]; 
+	usernameContext: string;
+	profilePicture: string;
+	setUpdate: React.Dispatch<React.SetStateAction<number>>;
+	signout: () => Promise<void>;
+}
 
-export const UserProvider: React.FC = ({ children }) => {
+interface UserProviderProps {
+	children: React.ReactNode;
+}
+
+export const UserContext = createContext<UserContextType | null>(null);
+
+export const UserProvider = ({ children }: UserProviderProps) => {
 	const [user, setUser] = useState('')
 	const [followings, setFollowings] = useState([]); 
 	const [followers, setFollowers] = useState([]); 
 	const [usernameContext, setUsernameContext] = useState('');
-	const [profilePicture, setProfilePicture] = useState();
+	const [profilePicture, setProfilePicture] = useState('');
 	const [update, setUpdate] = useState(0); 
 
 	const auth = FIREBASE_AUTH; 
@@ -21,43 +35,28 @@ export const UserProvider: React.FC = ({ children }) => {
 			const auth = getAuth();
 			await signOut(auth);
 			console.log('User signed out!');
-			setUser(null);
-			setFollowings(null)
-			setFollowers(null)
-			setUsernameContext(null)
-			setProfilePicture(null)
+			setUser('');
+			setFollowings([])
+			setFollowers([])
+			setUsernameContext('')
+			setProfilePicture('')
 		} catch (error) {
 			console.log(error);
 		}
 	};
-	
 
     useEffect(()=>{
         if (!uid)
             return
 
-		getProfilePicture(uid).then((response) =>{
-			setProfilePicture(response?.url);
+		getUserContext(uid).then((response)=>{
+			setUser(uid);
+			setUsernameContext(response.username); 
+			setFollowings(response.followDetails.followings)
+			setFollowers(response.followDetails.followers)
+			setProfilePicture(response.profilePictureUrl)
 		})
 
-		setUser(uid);
-		getUsername(uid).then((response)=>{
-			const data = JSON.parse(JSON.stringify(response)); 
-			setUsernameContext(data); 
-		});
-
-		getFollowDetails(uid).then((response)=>{
-			if(response) {
-				const responseFollowers = JSON.parse(JSON.stringify(response.Followers));
-				const responseFollowings = JSON.parse(JSON.stringify(response.Followings));
-		
-				setFollowers(responseFollowers);
-				setFollowings(responseFollowings); 
-			} else {
-				setFollowers([]);
-				setFollowings([]); 
-			}
-		});
     },[uid, update])
 
 	return (
