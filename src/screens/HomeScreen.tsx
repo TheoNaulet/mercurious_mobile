@@ -1,11 +1,12 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, StyleSheet, ScrollView, RefreshControl, Dimensions } from 'react-native';
-import { getAllPlacesByIdAndUserInteractions, getNewPlacesFeed, getPlacesFeed } from '../api/places';
-import CardFeed from '../components/cards/CardFeed';
+import React, { useEffect, useState, useCallback, useContext } from 'react';
+import { View, Text, StyleSheet, ScrollView, RefreshControl, } from 'react-native';
+import { getAllPlaceByIdAndUserInteractions, getPlacesFeed } from '../api/places';
 import { FIREBASE_AUTH } from '../../FirebaseConfig';
+import { UserContext } from '../../context/UserContext';
+import NewCardFeed from '../components/cards/NewCardFeed';
 
 const HomeScreen = ({navigation}) => {
-
+  const { followings } = useContext(UserContext)
   const auth = FIREBASE_AUTH; 
   const uid = auth?.currentUser?.uid; 
 
@@ -13,42 +14,50 @@ const HomeScreen = ({navigation}) => {
   const [error, setError] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
   const [page, setPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false); 
 
-  const fetchPlaces = async (nextPage) => {
+  const fetchPlaces = useCallback(async (nextPage) => {
+    setIsLoading(true);
     try {
       const data = await getPlacesFeed(nextPage);
-      // let test = await getNewPlacesFeed();
-      // test = JSON.parse(JSON.stringify(test));
-
-      // console.log('TEST 1 '   test); 
-      // const test2 = await getAllPlacesByIdAndUserInteractions(test, uid);
-      
-      // console.log('test 2 = ' + test2); 
-      // console.log('test ===========' + test);
-      // const test = await getAllPlacesByIdAndUserInteractions(data, uid); 
-      // console.log(test);
-      setPlaces(prevPlaces => [...prevPlaces, ...data]);
+      const response = await getAllPlaceByIdAndUserInteractions(data, uid, followings);
+      if (!response) return;
+      setPlaces(prevPlaces => nextPage === 1 ? response : [...prevPlaces, ...response]); 
+      setError(null);
     } catch (error) {
-      setError(error.message);
+      setError(error?.message);
+    } finally {
+      setIsLoading(false);
     }
-  };
-
-  useEffect(() => {
-    fetchPlaces(page);
-  }, []);
+  }, [uid, followings]);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    setPage(1);
-    fetchPlaces(1).then(() => setRefreshing(false));
-  }, []);
+    setPlaces([]); 
+    fetchPlaces(1).then(() => {
+      setPage(1);
+      setRefreshing(false);
+    });
+  }, [fetchPlaces]);
 
-  const handleScroll = ({nativeEvent}) => {
-    if (nativeEvent.contentOffset.y + nativeEvent.layoutMeasurement.height >= nativeEvent.contentSize.height) {
-      setPage(prevPage => prevPage + 1);
-      fetchPlaces(page);
+  const handleScroll = ({ nativeEvent }) => {
+    if (isCloseToBottom(nativeEvent) && !isLoading) {
+      const nextPage = page + 1;
+      setPage(nextPage);
+      fetchPlaces(nextPage);
     }
   };
+
+  const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
+    const paddingToBottom = 2000;
+    return layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom;
+  };
+
+  useEffect(() => {
+    if (!uid || !followings || isLoading || places.length > 0) return;
+    fetchPlaces(page);
+  }, [uid, followings, fetchPlaces, isLoading, places]);
 
   return (
     <ScrollView
@@ -63,9 +72,11 @@ const HomeScreen = ({navigation}) => {
         {error && <Text style={styles.errorText}>Erreur: {error}</Text>}
         {places && (
           <View style={styles.placesContainer}>
-            {places.map((val, key) => (
-              <CardFeed navigation={navigation} key={key} id={val._id}/>
-            ))}
+            {places.map((val, key) => {
+              return(
+                  <NewCardFeed key={key} navigation={navigation} place={val}/>
+              )
+            })}
           </View>
         )}
     </ScrollView>
