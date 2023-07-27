@@ -35,17 +35,25 @@ const SearchScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
       <View style={styles.searchBar}>
-        <TextInput
+        <View style={styles.inputContainer}>
+          <TextInput
             style={styles.input}
-            placeholder="Recherchez un lieu..."
+            placeholder="Recherchez un pays..."
             value={query}
             onChangeText={(text) => setQuery(text)}
           />
           {query.length > 0 && (
-        <TouchableOpacity style={styles.clearButton} onPress={() => setQuery('')}>
-            <Icon type='font-awesome' name="times" size={20} color="#444" />
-        </TouchableOpacity>
-      )}
+            <TouchableOpacity style={styles.clearButton} onPress={() => {
+              setQuery(''),
+              setPlaceList([]),
+              setCityList([]),
+              setCountryList([]),
+              setUserList([])
+            }}>
+              <Icon type='font-awesome' name="times" size={20} color="#444" />
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
       <ScrollView scrollEventThrottle={16} onScroll={Keyboard.dismiss}>
       {cityList && cityList.map((val, key) => (
@@ -53,11 +61,14 @@ const SearchScreen = ({navigation}) => {
           key={key}
           style={styles.searchItem}
           onPress={() => {
-            navigation.navigate('CityScreen', { city: val.Name });
+            navigation.navigate('CityScreen', { city: val?.Name, id: val?._id });
           }}
         >
           <Image style={styles.itemImage} source={{ uri: val.Image }} />
-          <Text style={styles.searchItemText}>{val.Name}, {val.Country}</Text>
+          <View style={styles.itemTextContainer}>
+            <Text style={styles.searchItemText}>{val.Name}</Text>
+            <Text style={styles.secondaryItemText}>{val.Country}</Text>
+          </View>
         </TouchableOpacity>
       ))}
 
@@ -66,11 +77,14 @@ const SearchScreen = ({navigation}) => {
           key={key}
           style={styles.searchItem}
           onPress={() => {
-            navigation.navigate('CountryScreen', { country: val.countryName });
+            navigation.navigate('CountryScreen', { country: val.countryName, id: val._id });
           }}
         >
           <Image style={styles.itemImage} source={{ uri: val.image }} />
-          <Text style={styles.searchItemText}>{val.countryName}</Text>
+          <View style={styles.itemTextContainer}>
+            <Text style={styles.searchItemText}>{val.countryName}</Text>
+            <Text style={styles.secondaryItemText}>{val?.continent}</Text>
+          </View>
         </TouchableOpacity>
       ))}
 
@@ -83,7 +97,10 @@ const SearchScreen = ({navigation}) => {
           }}
         >
           <Image style={styles.itemImage} source={{ uri: val.Image }} />
-          <Text style={styles.searchItemText}>{val.Name}, {val.City}</Text>
+          <View style={styles.itemTextContainer}>
+            <Text style={styles.searchItemText}>{val.Name}</Text>
+            <Text style={styles.secondaryItemText}>{val.City}, {val?.Country}</Text>
+          </View>
         </TouchableOpacity>
       ))}
 
@@ -96,7 +113,10 @@ const SearchScreen = ({navigation}) => {
           }}
         >
           <Image style={styles.itemImage} source={{ uri: val.Profile_picture }} />
-          <Text style={styles.searchItemText}>{val.Username}</Text>
+          <View style={styles.itemTextContainer}>
+            <Text style={styles.searchItemText}>{val.Username}</Text>
+            <Text style={styles.secondaryItemText}></Text>
+          </View>
         </TouchableOpacity>
       ))}
       </ScrollView>
@@ -110,22 +130,27 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
   },
   searchBar: {
-    marginTop: 10,
     padding: 10,
     flexDirection:"row",
+    justifyContent: "center",
+    borderBottomColor:'#D3D3D3', 
+    borderBottomWidth:0.5,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    borderRadius: 25,
+    width: "95%",
+    height: 50,
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    backgroundColor: '#E3E3E3',
   },
   input: {
-    marginLeft:20,
-    width:300,
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingLeft: 10,
+    flex: 1,
+    paddingLeft:10
   },
-  dismissButton:{
-    alignSelf:"center",
-    margin:"auto",
+  clearButton: {
+    padding: 5,
   },
   itemText: {
     fontSize: 18,
@@ -138,21 +163,25 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
   },
+  itemTextContainer:{
+    paddingLeft:10,
+    justifyContent:'center',
+    marginRight:10,
+    flex:1,
+  },
   searchItemText:{
-    fontSize:15,
-    alignSelf:"center",
-    marginLeft:10
+    fontSize:17,
+    fontWeight:'bold',
+  },
+  secondaryItemText:{
+    color:'#A7A7A7'
   },
   itemImage:{
     height:50,
     width:50,
     borderRadius:100,
   }, 
-  clearButton:{
-    alignItems:'center',
-    justifyContent:'center',
-    margin:10,
-  }
+
 });
 
 export default SearchScreen;
