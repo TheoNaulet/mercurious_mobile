@@ -145,3 +145,47 @@ export async function fetchCountriesWithVisitors(followings: Array<string>, page
         return response.data;
     });
 }
+
+/**
+ * Récupère les amis qui ont visité un pays spécifique
+ *
+ * @param {Array<string>} friendIds - Les ID des amis à vérifier
+ * @param {string} countryId - L'ID du pays à vérifier
+ *
+ * @returns {Promise<any>} Un Promise qui résout avec les amis qui ont visité le pays spécifié.
+ */
+export async function getFriendsWhoVisited(friendIds:Array<string>, countryId: string): Promise<any> {
+    return axiosInstance.post(`${process.env.REACT_APP_API_URL}/api/user/getFriendsWhoVisited`, {
+        friendIds: friendIds,
+        countryId: countryId
+    })
+    .then((response) => {
+        return response.data;
+    })
+    .catch((error) => {
+        console.error(`Une erreur est survenue lors de la récupération des amis qui ont visité le pays : ${error}`);
+        throw error;
+    });
+  }
+
+  /**
+ * Récupère les amis qui ont visité une city spécifique
+ *
+ * @param {Array<string>} friendIds - Les ID des amis à vérifier
+ * @param {string} cityId - L'ID de la city à vérifier
+ *
+ * @returns {Promise<any>} Un Promise qui résout avec les amis qui ont visité la ville spécifié.
+ */
+export async function getFriendsWhoVisitedCity(friendIds:Array<string>, cityId: string): Promise<any> {
+    return axiosInstance.post(`${process.env.REACT_APP_API_URL}/api/user/getFriendsWhoVisitedCity`, {
+        friendIds: friendIds,
+        cityId: cityId
+    })
+    .then((response) => {
+        return response.data;
+    })
+    .catch((error) => {
+        console.error(`Une erreur est survenue lors de la récupération des amis qui ont visité le pays : ${error}`);
+        throw error;
+    });
+}
