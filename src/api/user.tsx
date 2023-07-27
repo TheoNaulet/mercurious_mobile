@@ -218,3 +218,20 @@ export async function fetchUserProfiles(followers: Array<string>, followings: Ar
         console.error('Erreur lors de la récupération des informations de profil des utilisateurs', error);
     }
 }
+
+/**
+ * Get the data of a user by user ID to usercontext.
+ *
+ * @async
+ * @param {string} userId - The user ID.
+ * @returns {Promise<any>} Returns the data of the response if the request is successful.
+ * @throws {Error} If the request fails, it throws an error.
+ */
+export async function getUserContext(userId: string): Promise<any> {	
+	if (userId === undefined)
+		return;
+
+	return axiosInstance.post(`${process.env.REACT_APP_API_URL}/api/user/getUserContext`, { userId: userId }).then((response) => {
+		return response.data;
+	});
+}
