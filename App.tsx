@@ -26,6 +26,10 @@ const HomeStackNavigator = () => (
   <HomeStack.Navigator initialRouteName="HomeScreen"  screenOptions={{ headerShown: true, headerStyle:{backgroundColor:"#BB2649", height:50}, headerTitle:''}}>
     <HomeStack.Screen name="HomeScreen" component={HomeScreen} />
     <HomeStack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+    <HomeStack.Screen name="CityScreen" component={CityScreen}/>
+    <HomeStack.Screen name="CountryScreen" component={CountryScreen}/>
+    <HomeStack.Screen name="PlaceScreen" component={PlaceScreen} />
+    <HomeStack.Screen name="FriendScreen" component={FriendScreen} />
   </HomeStack.Navigator>
 );
 
@@ -34,9 +38,6 @@ const SearchStack = createStackNavigator();
 const SearchStackNavigator = () => (
   <SearchStack.Navigator initialRouteName="SearchScreen"  screenOptions={{ headerShown: true, headerStyle:{backgroundColor:"#BB2649", height:50}, headerTitle:''}}>
     <SearchStack.Screen name="SearchScreen" component={SearchScreen} />
-    <SearchStack.Screen name="CityScreen" component={CityScreen} options={({ route }) => ({ title: route?.params?.city })}/>
-    <SearchStack.Screen name="CountryScreen" component={CountryScreen} options={({ route }) => ({ title: route?.params?.country })} />
-    <SearchStack.Screen name="PlaceScreen" component={PlaceScreen} />
   </SearchStack.Navigator>
 );
 
@@ -62,7 +63,6 @@ const UserStack = createStackNavigator();
 const UserStackNavigator = () => (
   <UserStack.Navigator initialRouteName="UserScreen" screenOptions={{ headerShown: true, headerStyle:{backgroundColor:"#BB2649", height:50}, headerTitle:''}}>
     <UserStack.Screen name="UserScreen" component={UserScreen} />
-    <UserStack.Screen name="FriendScreen" component={FriendScreen} />
   </UserStack.Navigator>
 );
 
@@ -82,18 +82,18 @@ const BottomTabNavigator = () => {
                       'Liked': 'heart',
                       'Search': 'search',
                       'Explore': 'compass',
-                      'User': 'user'
+                      'User': 'user',
                   };
                   let iconName = routeIcons[route.name];
                   return <Icon name={iconName} size={size} color={color} type="font-awesome" />;
               },
           })}
       >
-          <Tab.Screen name="Home" component={HomeStackNavigator} options={{  headerShown:false,  headerStyle: { height: 50 }, }} />
-          <Tab.Screen name="Liked" component={LikedStackNavigator} options={{  headerShown:false,  headerStyle: { height: 50 }, }}/>
-          <Tab.Screen name="Search" component={SearchStackNavigator} options={{  headerShown:false,  headerStyle: { height: 50 }, }}/>
-          <Tab.Screen name="Explore" component={ExploreStackNavigator} options={{  headerShown:false,  headerStyle: { height: 50 }, }}/>
-          <Tab.Screen name="User" component={UserStackNavigator} options={{  headerShown:false,  headerStyle: { height: 50 }, }}/>
+          <Tab.Screen name="Home" component={HomeStackNavigator} options={{  headerShown:false,  headerStyle: { height: 50}}} />
+          <Tab.Screen name="Liked" component={LikedStackNavigator} options={{  headerShown:false,  headerStyle: { height: 50}}}/>
+          <Tab.Screen name="Search" component={SearchStackNavigator} options={{  headerShown:false,  headerStyle: { height: 50}}}/>
+          <Tab.Screen name="Explore" component={ExploreStackNavigator} options={{  headerShown:false,  headerStyle: { height: 50}}}/>
+          <Tab.Screen name="User" component={UserStackNavigator} options={{  headerShown:false,  headerStyle: { height: 50} }}/>
       </Tab.Navigator>
   );
 };
