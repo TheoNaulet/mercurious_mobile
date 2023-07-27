@@ -7,6 +7,7 @@ interface ExploreCardProps {
   CardImage: string;
   type: string;
   visitors:Array<string>
+  id:string
 }
 
 /**
@@ -15,15 +16,15 @@ interface ExploreCardProps {
  * @param {ExploreCardProps} props - The properties passed to this component.
  * @returns {JSX.Element} A JSX element that displays a card with image and text.
  */
-const ExploreCard: React.FC<ExploreCardProps> = ({ Name, CardImage, visitors, type }: ExploreCardProps): JSX.Element => {
+const ExploreCard: React.FC<ExploreCardProps> = ({ Name, CardImage, visitors, type, id }: ExploreCardProps): JSX.Element => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
   const navigation = useNavigation();
 
   const handlePress = () => {
     const actions:any = {
-      'city': () => navigation.navigate('CityScreen', { city: Name }),
-      'country': () => navigation.navigate('CountryScreen', { country: Name }),
+      'city': () => navigation.navigate('CityScreen', { city: Name, id: id }),
+      'country': () => navigation.navigate('CountryScreen', { country: Name, id:id }),
       'disabled': () => setIsDisabled(true)
     };
     if (actions[type]) {
