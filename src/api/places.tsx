@@ -62,8 +62,8 @@ export async function searchPlace(query: string): Promise<any> {
  * @param {string} city - The city to search places in.
  * @returns {Promise<any>} Returns the data of the response.
  */
-export async function getPlacesByCity(city: string): Promise<any> {
-	return axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/places/getPlacesByCity/${city}`).then((response) => {
+export async function getPlacesByCity(city: string, page:number): Promise<any> {
+	return axiosInstance.get(`${process.env.REACT_APP_API_URL}/api/places/getPlacesByCity/${city}?page=${page}`).then((response) => {
 		return response.data;
 	});
 }
@@ -286,3 +286,14 @@ export async function likePlaceCityCountry(id: string, place: any, city: any, co
         throw error;
     });
 }
+
+export async function getAllPlaceByIdAndUserInteractions(placeIds: Array<string>, userId: string, friendIds: Array<string>): Promise<any> {
+	if (placeIds === undefined || userId === undefined)
+		return;
+
+	return axiosInstance.post(`${process.env.REACT_APP_API_URL}/api/places/getAllPlacesByIdAndUserInteractions`, { placeIds: placeIds, userId: userId, friendIds: friendIds}).then((response) => {
+		return response.data;
+	}).catch((error) => {
+		console.error('Erreur axios:', error);
+        console.error('Détails de l\'erreur:', error.response);}
+)}
