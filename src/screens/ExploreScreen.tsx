@@ -21,10 +21,12 @@ const ExploreScreen = () => {
   const [cityPage, setCityPage] = useState(1);
 
 
-  const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
-    const paddingToBottom = 20;
-    return layoutMeasurement.height + contentOffset.y >=
-      contentSize.height - paddingToBottom;
+  const isCloseToRightCountries = ({layoutMeasurement, contentOffset, contentSize}) => {
+    return contentOffset.x >= (contentSize.width - layoutMeasurement.width);
+  };
+  
+  const isCloseToRightCities = ({layoutMeasurement, contentOffset, contentSize}) => {
+    return contentOffset.x >= (contentSize.width - layoutMeasurement.width);
   };
   
   const handleFetchMoreCountries = async () => {
@@ -37,11 +39,18 @@ const ExploreScreen = () => {
   };
   
   const handleFetchMoreCities = async () => {
-    if(!country){
-      const newPage = cityPage + 1;
-      setCityPage(newPage);
-      const moreCities = await getAllCitiesTest(followings, newPage);
-      setCityList(oldCities => [...oldCities, ...moreCities]);
+      if(!country){
+        if(cityList.length % 20 === 0) {
+          const moreCities = await getAllCitiesTest(followings, cityPage);
+          setCityList(oldCities => [...oldCities, ...moreCities]);
+          setCityPage(cityPage+1)
+        }
+    } else {
+      if(cityList.length % 20 === 0) {
+        const moreCitiesByCountry = await getCitiesByCountry(country, followings, cityPage);
+        setCityList(oldCities => [...oldCities, ...moreCitiesByCountry]);
+        setCityPage(cityPage+1)
+      }
     }
   };
 
@@ -73,6 +82,8 @@ const ExploreScreen = () => {
 	}, [continent]);
 
   useEffect(() => {
+    setCityList([]); 
+    setCityPage(2); 
 		handleFetchCitiesByCountry();
 	}, [country]);
 
@@ -88,14 +99,14 @@ const ExploreScreen = () => {
       <ScrollView 
         ref={scrollRef}
         onScroll={({nativeEvent}) => {
-          if (isCloseToBottom(nativeEvent)) {
+          if (isCloseToRightCountries(nativeEvent)) {
             handleFetchMoreCountries();
           }
         }}
         scrollEventThrottle={400}
         showsHorizontalScrollIndicator={false} alwaysBounceVertical={false} contentContainerStyle={styles.countriesContainer}>
         {countryList.map((val, index) => (
-            <ExploreCard visitors={val?.visitorUserIds} Name={val.countryName} CardImage={val.image} key={index} type="country"/>
+            <ExploreCard id={val._id} visitors={val?.visitorUserIds} Name={val.countryName} CardImage={val.image} key={index} type="country"/>
           ))}
       </ScrollView>
       <ButtonList item={country} setItem={setCountry} list={countryList.map(country => country.countryName)}/>
@@ -104,8 +115,8 @@ const ExploreScreen = () => {
         alwaysBounceVertical={false} 
         contentContainerStyle={styles.citiesContainer}
         onScroll={({nativeEvent}) => {
-            if (isCloseToBottom(nativeEvent)) {
-                handleFetchMoreCities();
+            if (isCloseToRightCities(nativeEvent)) {
+              handleFetchMoreCities();
             }
         }}
         scrollEventThrottle={400}>
