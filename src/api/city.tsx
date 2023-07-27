@@ -25,8 +25,8 @@ export async function getAllCities(page: number = 1): Promise<any> {
  * @param {string} country - The country to filter cities by.
  * @returns {Promise<any>} Returns the data of the response with cities from the specified country.
  */
-export async function getCitiesByCountry(country: string, followings: Array<string>): Promise<any> {
-	return axiosInstance.post(`${process.env.REACT_APP_API_URL}/api/city/getCitiesByCountry/${country}`, { followings: followings })
+export async function getCitiesByCountry(country: string, followings: Array<string>, page:number): Promise<any> {
+	return axiosInstance.post(`${process.env.REACT_APP_API_URL}/api/city/getCitiesByCountry/${country}?page=${page}`, { followings: followings })
 		.then((response) => {
 			return response.data;
 		});
