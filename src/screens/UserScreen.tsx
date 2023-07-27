@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef, useContext, useLayoutEffect } from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState, useRef, useContext } from 'react';
+import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { getVisitedCountries } from '../api/country';
 import { getVisitedPlaces } from '../api/places';
 import { getVisitedCitiesByCountry } from '../api/city';
@@ -11,15 +11,13 @@ import UserProfileInfo from '../components/utils/UserProfileInfos';
 import { useIsFocused } from '@react-navigation/native';
 import { UserContext } from '../../context/UserContext';
 // ProfileSection.js
-import { Ionicons } from '@expo/vector-icons';
-import { Icon } from 'react-native-elements';
 import SettingsModal from '../components/modals/SettingsModal';
 
 const ProfileSection = ({navigation}) => {
   const auth = FIREBASE_AUTH; 
   const uid = auth?.currentUser?.uid; 
   const isFocused = useIsFocused();
-  const { usernameContext, followers, followings, profilePicture, signout} = useContext(UserContext);
+  const { usernameContext, followers, followings, profilePicture} = useContext(UserContext);
 
   const scrollViewRef = useRef(); 
 	const [username, setUsername] = useState();
@@ -30,16 +28,6 @@ const ProfileSection = ({navigation}) => {
 	const [currentCountry, setCurrentCountry] = useState(""); 
 	const [currentCity, setCurrentCity] = useState();
   
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <TouchableOpacity onPress={signout} style={{marginRight: 15}}>
-          <Ionicons name="log-out-outline" size={30} color="black" />
-        </TouchableOpacity>
-      ),
-    });
-  }, [navigation]);
-
 	const handleFetchCountries = () => {
 		getVisitedCountries(uid).then((response) => {
 			if(response[0]?.length === 0){
