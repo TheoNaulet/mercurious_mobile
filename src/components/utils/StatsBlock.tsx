@@ -63,47 +63,55 @@ const StatsBlock: React.FC<StatsBlockProps> = ({ followers, followings, navigati
                                     <Icon type='font-awesome'  name='arrow-left' />
                                 </TouchableOpacity>
                                 <View style={styles.buttonContainer}>
-                                    <TouchableOpacity style={styles.buttonSelect} onPress={() => handleTabChange('Followers')}>
+                                    <TouchableOpacity style={[styles.buttonSelect, activeTab === 'Followers' && styles.activeTabIndicator]} onPress={() => handleTabChange('Followers')}>
                                         <Text>{'Followers'}</Text>
-                                        {activeTab === 'Followers' && <View style={styles.activeTabIndicator} />}
                                     </TouchableOpacity>
                                 </View>
                                 <View style={styles.buttonContainer}>
-                                    <TouchableOpacity style={styles.buttonSelect} onPress={() => handleTabChange('Following')}>
+                                    <TouchableOpacity style={[styles.buttonSelect, activeTab === 'Following' && styles.activeTabIndicator]} onPress={() => handleTabChange('Following')}>
                                         <Text>{'Following'}</Text>
-                                        {activeTab === 'Following' && <View style={styles.activeTabIndicator} />}
                                     </TouchableOpacity>
                                 </View>
                             </View>
-                            {activeTab === 'Followers' && followersInfos.map((user, index) => {
-                            return (
-                                <TouchableOpacity
-                                    key={index}
-                                    style={styles.searchItem}
-                                    onPress={() => {
-                                        navigation.navigate('FriendScreen', { User: user.userId })
-                                        handleCloseModal();
-                                    }}
-                                >
-                                    <Image style={styles.itemImage} source={{ uri: user.profilePictureUrl }} />
-                                    <Text style={styles.searchItemText}>{user.Username}</Text>
-                                </TouchableOpacity>
-                            )})}
-                            {activeTab === 'Following' && followingsInfos.map((user, index) => {
-                                return (
-                                    <TouchableOpacity
-                                    key={index}
-                                    style={styles.searchItem}
-                                    onPress={() => {
-                                        navigation.navigate('FriendScreen', { User: user.userId });
-                                        handleCloseModal();
-                                    }}
-                                >
-                                    <Image style={styles.itemImage} source={{ uri: user.profilePictureUrl }} />
-                                    <Text style={styles.searchItemText}>{user.Username}</Text>
-                                </TouchableOpacity>
-                                )
-                                })}
+                            {activeTab === 'Followers' && (
+                                followersInfos.length === 0 ? 
+                                <Text style={styles.message}>Aucun followers</Text> :
+                                followersInfos.map((user, index) => {
+                                    return (
+                                        <TouchableOpacity
+                                            key={index}
+                                            style={styles.searchItem}
+                                            onPress={() => {
+                                                navigation.navigate('FriendScreen', { User: user.userId })
+                                                handleCloseModal();
+                                            }}
+                                        >
+                                            <Image style={styles.itemImage} source={{ uri: user.profilePictureUrl }} />
+                                            <Text style={styles.searchItemText}>{user.Username}</Text>
+                                        </TouchableOpacity>
+                                    )
+                                })
+                            )}
+                            {activeTab === 'Following' && (
+                                followingsInfos.length === 0 ?
+                                <Text style={styles.message}>Aucun followings</Text> :
+                                followingsInfos.map((user, index) => {
+                                    return (
+                                        <TouchableOpacity
+                                        key={index}
+                                        style={styles.searchItem}
+                                        onPress={() => {
+                                            navigation.navigate('FriendScreen', { User: user.userId });
+                                            handleCloseModal();
+                                        }}
+                                    >
+                                        <Image style={styles.itemImage} source={{ uri: user.profilePictureUrl }} />
+                                        <Text style={styles.searchItemText}>{user.Username}</Text>
+                                    </TouchableOpacity>
+                                    )
+                                })
+                            )}
+
                         </View>
                     </View>
                 </Modal>
@@ -137,7 +145,7 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         width:"100%",
         borderBottomWidth: 1,
-        justifyContent:'space-evenly',
+        borderBottomColor:"#D3D3D3"
     },
     centeredView: {
         flex: 1,
@@ -148,10 +156,8 @@ const styles = StyleSheet.create({
         height:'100%',
         width:'100%',
         paddingTop:50,
-        margin: 20,
         backgroundColor: "white",
         borderRadius: 20,
-        padding: 35,
         alignItems: "center",
         shadowColor: "#000",
         shadowOffset: {
@@ -166,6 +172,10 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         padding: 10,
         elevation: 2
+    },
+    message:{
+        marginTop:20,
+        fontSize:20,
     },
     buttonSelect:{
         flex: 1, 
@@ -185,23 +195,26 @@ const styles = StyleSheet.create({
     buttonContainer: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center',
+        alignContent:'flex-end',
+        alignSelf:"center",
+        height:20,
     },
     activeTabIndicator: {
-        width: '100%',
-        height: 1,
-        backgroundColor:"#D3D3D3",
+        borderBottomWidth: 1,
+        borderBottomColor: "#D3D3D3",
     },
     searchItem:{
         flexDirection:"row",
         padding:10,
+        paddingHorizontal:20,
         alignContent:'center',
         borderBottomWidth: 1,
         borderBottomColor: '#e0e0e0',
         width: '100%',
     },
     searchItemText:{
-        fontSize:15,
+        fontSize:18,
+        fontWeight:'bold',
         alignSelf:"center",
         marginLeft:10
     },
